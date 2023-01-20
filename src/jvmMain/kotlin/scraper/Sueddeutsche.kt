@@ -46,7 +46,7 @@ class Sueddeutsche {
                     teaser = teaser,
                     breadcrumbs = breadcrumbs,
                     author = author,
-                    date = date
+                    dateString = date
                 )
             )
         }

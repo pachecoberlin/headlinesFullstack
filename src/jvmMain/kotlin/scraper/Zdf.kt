@@ -42,7 +42,7 @@ class Zdf {
                     provider = "ZDF",
                     overline = overline,
                     text = text,
-                    date = date
+                    dateString = date
                 )
             )
         }

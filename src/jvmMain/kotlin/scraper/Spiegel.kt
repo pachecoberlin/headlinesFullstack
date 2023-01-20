@@ -38,7 +38,7 @@ class Spiegel {
                     title = title,
                     url = url,
                     provider = "Spiegel",
-                    date = date
+                    dateString = date
                 )
             )
         }

@@ -34,7 +34,7 @@ class Tagesschau {
                     title = title,
                     url = "$baseUrl$url",
                     provider = "Tagesschau",
-                    date = time + date
+                    dateString = time + date
                 )
             )
         }

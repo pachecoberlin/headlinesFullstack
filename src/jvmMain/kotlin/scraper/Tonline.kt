@@ -40,7 +40,7 @@ class Tonline {
                     url = "$baseUrl$url",
                     provider = "T-Online",
                     overline = overline,
-                    date = date
+                    dateString = date
                 )
             )
         }

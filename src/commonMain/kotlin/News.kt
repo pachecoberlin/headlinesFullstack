@@ -10,14 +10,15 @@ data class News(
     val text: String = "",
     val breadcrumbs: List<String> = emptyList(),
     val author: String = "",
-    val date: String = ""
+    val dateString: String = "",
+    val datePattern : String = ""
 ) {
     fun contains(searchText: String): Boolean {
         return this.toString().contains(searchText, true)
     }
 
     override fun toString(): String {
-        return "$title$url$provider$overline$teaser$text$breadcrumbs$author$date$id"
+        return "$title$provider$overline$teaser$text$breadcrumbs$author"
     }
 
     val id: Int = hashCode()
