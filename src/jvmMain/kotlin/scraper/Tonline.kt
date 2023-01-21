@@ -33,14 +33,15 @@ class Tonline {
             val url = titleAndLink?.attr("href") ?: ""
             val title = titleAndLink?.wholeOwnText() ?: ""
             val overline = newsEntry?.getElementsByClass("css-169b1y4")?.first()?.text() ?: ""
-            val date = div.parent()?.parent()?.parent()?.attr("data-tb-region") ?: ""
+            val date = div.parent()?.parent()?.parent()?.getElementsByClass("eamwxa70")?.first()?.wholeOwnText() ?: ""
             newsList.add(
                 News(
                     title = title,
                     url = "$baseUrl$url",
                     provider = "T-Online",
                     overline = overline,
-                    dateString = date
+                    dateString = date,
+                    datePattern = "eeee, dd.MM"
                 )
             )
         }

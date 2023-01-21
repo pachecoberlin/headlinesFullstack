@@ -46,7 +46,8 @@ class Sueddeutsche {
                     teaser = teaser,
                     breadcrumbs = breadcrumbs,
                     author = author,
-                    dateString = date
+                    dateString = date.removePrefix("vor").removeSuffix("Min."),
+                    datePattern = "[dd.MM.yyyy | ][HH:]mm"
                 )
             )
         }

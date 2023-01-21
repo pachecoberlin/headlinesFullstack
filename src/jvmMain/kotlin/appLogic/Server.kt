@@ -2,7 +2,6 @@ package appLogic
 
 import News
 import ShoppingListItem
-import entityLogic.test
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
@@ -25,7 +24,6 @@ fun main() {
     scraper.getNews()
     embeddedServer(Netty, port) {
         serverSettings()
-
         routings(scraper)
     }.start(wait = true)
 }

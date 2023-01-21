@@ -34,7 +34,9 @@ class Zdf {
             val overline = newsEntry?.getElementsByClass("teaser-cat-category")?.first()?.text() ?: ""
             val title = newsEntry?.getElementsByClass("normal-space")?.first()?.wholeOwnText() ?: ""
             val text = newsEntry?.getElementsByClass("panel-content")?.first()?.wholeOwnText() ?: ""
-            val date = newsEntry?.getElementsByClass("teaser-time")?.first()?.wholeOwnText() ?: ""
+            val time = newsEntry?.getElementsByClass("teaser-time")?.first()?.wholeOwnText() ?: ""
+            val date = div.parent()?.parent()?.parent()?.getElementsByClass("b-news-ticker-separator")?.first()?.wholeOwnText()?.trim()?.removePrefix("Gestern")
+                ?.removePrefix("Heute") ?: ""
 
             newsList.add(
                 News(
@@ -42,8 +44,9 @@ class Zdf {
                     provider = "ZDF",
                     overline = overline,
                     text = text,
-                    dateString = date
-                )
+                    dateString = "$time$date",
+                    datePattern = "HH:mm[,dd.MM.yyyy]"
+                    )
             )
         }
     }

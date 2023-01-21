@@ -32,13 +32,13 @@ class Spiegel {
             val title = anchor.attr("title")
             //TODO val author = they are there
 
-
             newsList.add(
                 News(
                     title = title,
                     url = url,
                     provider = "Spiegel",
-                    dateString = date
+                    dateString = date.removeSuffix(" Uhr"),
+                    datePattern = "d. MMMM, HH.mm",
                 )
             )
         }
