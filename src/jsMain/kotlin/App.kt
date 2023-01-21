@@ -1,4 +1,5 @@
 import csstype.ClassName
+import entities.News
 import kotlinx.coroutines.*
 import react.*
 import react.dom.html.AnchorTarget

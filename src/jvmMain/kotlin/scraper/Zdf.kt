@@ -1,6 +1,7 @@
 package scraper
 
-import News
+import entities.News
+import entityLogic.NewsFactory
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
@@ -28,25 +29,24 @@ class Zdf {
                 System.err.println("No tag with class:$htmlClass in here")
                 return
             }
-            println("found $htmlClass")
-
             val newsEntry = newsContainer.first()
             val overline = newsEntry?.getElementsByClass("teaser-cat-category")?.first()?.text() ?: ""
             val title = newsEntry?.getElementsByClass("normal-space")?.first()?.wholeOwnText() ?: ""
             val text = newsEntry?.getElementsByClass("panel-content")?.first()?.wholeOwnText() ?: ""
             val time = newsEntry?.getElementsByClass("teaser-time")?.first()?.wholeOwnText() ?: ""
-            val date = div.parent()?.parent()?.parent()?.getElementsByClass("b-news-ticker-separator")?.first()?.wholeOwnText()?.trim()?.removePrefix("Gestern")
-                ?.removePrefix("Heute") ?: ""
+            val displayDate = div.parent()?.parent()?.parent()?.getElementsByClass("b-news-ticker-separator")?.first()?.wholeOwnText() ?: ""
+            val date = displayDate.trim().removePrefix("Gestern").removePrefix("Heute")
 
             newsList.add(
-                News(
+                NewsFactory.createNews(
                     title = title,
                     provider = "ZDF",
                     overline = overline,
                     text = text,
+                    displayDate = displayDate,
                     dateString = "$time$date",
                     datePattern = "HH:mm[,dd.MM.yyyy]"
-                    )
+                )
             )
         }
     }

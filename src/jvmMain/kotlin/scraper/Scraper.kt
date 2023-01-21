@@ -1,6 +1,6 @@
 package scraper
 
-import News
+import entities.News
 import entityLogic.relevant
 import kotlin.streams.toList
 

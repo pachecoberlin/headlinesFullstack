@@ -1,6 +1,7 @@
 package scraper
 
-import News
+import entities.News
+import entityLogic.NewsFactory
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
@@ -26,7 +27,6 @@ class Faz {
                 System.err.println("No tag with class:$htmlClass in here")
                 return
             }
-            println("found $htmlClass")
 
             val newsEntry = newsContainer.first()
             val titleAndLink = newsEntry?.getElementsByClass("ticker-news-title")?.first()?.getElementsByTag("a")?.first()
@@ -34,15 +34,16 @@ class Faz {
             val overline = newsEntry?.getElementsByClass("ticker-news-super")?.first()?.wholeOwnText() ?: ""
             val title = titleAndLink?.wholeOwnText() ?: ""
             val author = newsEntry?.getElementsByClass("ticker-news-author")?.first()?.wholeOwnText() ?: ""
-            var date = newsEntry?.getElementsByClass("ticker-news-time")?.first()?.wholeOwnText() ?: ""
-            if (date.length >= 16) date = date.substring(0..15)
+            var displayDate = newsEntry?.getElementsByClass("ticker-news-time")?.first()?.wholeOwnText() ?: ""
+            val date = if (displayDate.length >= 16) displayDate else displayDate.substring(0..15)
             newsList.add(
-                News(
+                NewsFactory.createNews(
                     title = title,
                     url = url,
                     provider = "FAZ",
                     overline = overline,
                     author = author,
+                    displayDate = displayDate,
                     dateString = date,
                     datePattern = "dd.MM.yyyy HH:mm",
                 )

@@ -1,6 +1,7 @@
 package scraper
 
-import News
+import entities.News
+import entityLogic.NewsFactory
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
@@ -26,7 +27,6 @@ class Sueddeutsche {
                 System.err.println("No tag with class:$htmlClass in here")
                 return
             }
-            println("found $htmlClass")
 
             val newsEntry = newsContainer.first()
             val url = newsEntry?.getElementsByClass("entrylist__link")?.first()?.attr("href") ?: ""
@@ -38,7 +38,7 @@ class Sueddeutsche {
             val breadcrumbs = newsEntry?.getElementsByClass("breadcrumb-list__item")?.map { it.text() } ?: emptyList()
 
             newsList.add(
-                News(
+                NewsFactory.createNews(
                     title = title,
                     url = url,
                     provider = "Süddeutsche",
@@ -46,8 +46,9 @@ class Sueddeutsche {
                     teaser = teaser,
                     breadcrumbs = breadcrumbs,
                     author = author,
-                    dateString = date.removePrefix("vor").removeSuffix("Min."),
-                    datePattern = "[dd.MM.yyyy | ][HH:]mm"
+                    displayDate = date,
+                    dateString = date.trim().removePrefix("vor").removeSuffix("Min."),
+                    datePattern = "[dd.MM.yyyy | ][HH:]m"
                 )
             )
         }
