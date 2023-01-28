@@ -12,7 +12,22 @@ plugins {
     kotlin("multiplatform") version "1.7.20-Beta"
     application //to run JVM part
     kotlin("plugin.serialization") version "1.7.20-Beta"
+ //Tomcat stuff for deploying as WAR servlet
+    id("com.github.node-gradle.node") version "3.5.1"
+    id("war")
+    id("org.gretty") version "4.0.3"
 }
+gretty {
+    servletContainer = "tomcat10"
+    contextPath = "/"
+    logbackConfigFile = "src/jvmMain/resources/logback.xml"
+}
+afterEvaluate {
+    tasks.getByName("run") {
+        dependsOn("appRun")
+    }
+}
+//Finish Tomcat stuff
 
 group = "org.example"
 version = "1.0-SNAPSHOT"
@@ -54,8 +69,13 @@ kotlin {
                 implementation("io.ktor:ktor-server-compression:$ktorVersion")
                 implementation("io.ktor:ktor-server-core-jvm:$ktorVersion")
                 implementation("io.ktor:ktor-server-netty:$ktorVersion")
+                implementation("io.ktor:ktor-server-servlet:$ktorVersion")
                 implementation("ch.qos.logback:logback-classic:$logbackVersion")
 //                implementation("org.litote.kmongo:kmongo-coroutine-serialization:$kmongoVersion")
+
+                implementation("javax.servlet:javax.servlet-api:4.0.1")
+                implementation("jakarta.servlet:jakarta.servlet-api:6.0.0")
+//                compileOnly("javax.servlet:javax.servlet-api:4.0.1")
 
                 implementation("org.jsoup:jsoup:1.15.3")
 //                implementation("org.jetbrains.kotlinx:kotlinx-html-jvm:0.8.0")
