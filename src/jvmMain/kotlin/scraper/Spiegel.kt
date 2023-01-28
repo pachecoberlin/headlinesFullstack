@@ -1,6 +1,7 @@
 package scraper
 
-import News
+import entities.News
+import entityLogic.NewsFactory
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
@@ -25,20 +26,20 @@ class Spiegel {
                 System.err.println("No anchor tag in here")
                 return
             }
-            println("found anchor tag")
 
             val date = div.getElementsByClass("items-end").first()?.firstElementChild()?.wholeOwnText() ?: ""
             val url = anchor.attr("href")
             val title = anchor.attr("title")
             //TODO val author = they are there
 
-
             newsList.add(
-                News(
+                NewsFactory.createNews(
                     title = title,
                     url = url,
                     provider = "Spiegel",
-                    date = date
+                    displayDate = date,
+                    dateString = date.removeSuffix(" Uhr"),
+                    datePattern = "[d. MMMM, ]HH.mm",
                 )
             )
         }

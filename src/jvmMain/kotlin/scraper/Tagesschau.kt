@@ -1,6 +1,7 @@
 package scraper
 
-import News
+import entities.News
+import entityLogic.NewsFactory
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
@@ -28,13 +29,14 @@ class Tagesschau {
             val time = anchor.parents()[0].wholeOwnText() ?: ""
             val date = anchor.parents()[3].firstElementChild()?.wholeOwnText() ?: ""
 
-
             newsList.add(
-                News(
+                NewsFactory.createNews(
                     title = title,
                     url = "$baseUrl$url",
                     provider = "Tagesschau",
-                    date = time + date
+                    displayDate=date,
+                    dateString = time.removeSuffix(" Uhr - ") + date,
+                    datePattern = "HH:mmeeee, dd. MMMM yyyy"
                 )
             )
         }

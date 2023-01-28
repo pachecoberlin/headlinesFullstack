@@ -1,10 +1,13 @@
 package scraper
 
-import News
+import entities.News
+import entityLogic.relevant
+import kotlin.streams.toList
 
 class Scraper {
-    val newsList = mutableListOf<News>()
+    val relevantNews = mutableListOf<News>()
     fun getNews(): List<News> {
+        val newsList = mutableListOf<News>()
         Sueddeutsche.getNews(newsList)
         Faz.getNews(newsList)
         Tagesschau.getNews(newsList)
@@ -12,10 +15,11 @@ class Scraper {
         Spiegel.getNews(newsList)
         Tonline.getNews(newsList)
         TableMedia.getNews(newsList)
-        return newsList
+        relevantNews.addAll(newsList.parallelStream().filter { it.relevant }.toList())
+        return relevantNews
     }
 
     fun filterBy(s: String?): List<News> {
-        return if (s == null) newsList else newsList.filter { it.contains(s) }
+        return if (s == null) relevantNews else relevantNews.filter { it.contains(s) }
     }
 }

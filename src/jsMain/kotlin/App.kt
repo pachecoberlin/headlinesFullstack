@@ -1,9 +1,9 @@
 import csstype.ClassName
+import entities.News
 import kotlinx.coroutines.*
 import react.*
 import react.dom.html.AnchorTarget
 import react.dom.html.ReactHTML.a
-import react.dom.html.ReactHTML.br
 import react.dom.html.ReactHTML.div
 import react.dom.html.ReactHTML.em
 import react.dom.html.ReactHTML.h1
@@ -44,7 +44,7 @@ val App = FC<Props> { props ->
                         href = item.url
                         target = AnchorTarget._blank
                         div {
-                            +item.date
+                            +item.dateString
                         }
                         div {
                             +item.provider

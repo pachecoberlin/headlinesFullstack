@@ -31,21 +31,21 @@ kotlin {
         }
     }
     sourceSets {
-        val commonMain by getting {
+        @Suppress("UNUSED_VARIABLE") val commonMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializationVersion")
                 implementation("io.ktor:ktor-client-core:$ktorVersion")
             }
         }
 
-        val commonTest by getting {
+        @Suppress("UNUSED_VARIABLE") val commonTest by getting {
             dependencies {
                 implementation(kotlin("test-common"))
                 implementation(kotlin("test-annotations-common"))
             }
         }
 
-        val jvmMain by getting {
+        @Suppress("UNUSED_VARIABLE") val jvmMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-serialization:$ktorVersion")
                 implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
@@ -53,7 +53,7 @@ kotlin {
                 implementation("io.ktor:ktor-server-cors:$ktorVersion")
                 implementation("io.ktor:ktor-server-compression:$ktorVersion")
                 implementation("io.ktor:ktor-server-core-jvm:$ktorVersion")
-                implementation("io.ktor:ktor-server-netty:$ktorVersion")
+                implementation("io.ktor:ktor-server-tomcat:$ktorVersion")
                 implementation("ch.qos.logback:logback-classic:$logbackVersion")
 //                implementation("org.litote.kmongo:kmongo-coroutine-serialization:$kmongoVersion")
 
@@ -67,7 +67,7 @@ kotlin {
             }
         }
 
-        val jsMain by getting {
+        @Suppress("UNUSED_VARIABLE") val jsMain by getting {
             dependencies {
                 implementation("io.ktor:ktor-client-js:$ktorVersion")
                 implementation("io.ktor:ktor-client-content-negotiation:$ktorVersion")
@@ -82,7 +82,7 @@ kotlin {
 }
 
 application {
-    mainClass.set("ServerKt")
+    mainClass.set("appLogic/ServerKt")
 }
 
 // include JS artifacts in any JAR we generate

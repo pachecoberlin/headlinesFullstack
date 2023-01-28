@@ -1,6 +1,7 @@
 package scraper
 
-import News
+import entities.News
+import entityLogic.NewsFactory
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
@@ -22,7 +23,6 @@ class TableMedia {
                 System.err.println("No div tag in here")
                 return
             }
-            println("found section presseschau")
             val element = divs[0]
             val childNodes = element.childNodes()
             for (i in 0 until childNodes.size step 3) {
@@ -40,7 +40,7 @@ class TableMedia {
         private fun addHeadline(anchor: Element, text: String, newsList: MutableList<News>) {
             val url = anchor.attr("href")
             val provider = anchor.text()
-            val news = News(title = text.trim(), url = url, provider = provider)
+            val news = NewsFactory.createNews(title = text, url = url, provider = provider)
             newsList.add(news)
         }
     }

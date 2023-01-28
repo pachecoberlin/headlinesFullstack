@@ -1,6 +1,7 @@
 package scraper
 
-import News
+import entities.News
+import entityLogic.NewsFactory
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
@@ -27,20 +28,21 @@ class Tonline {
                 System.err.println("No tag with class:$htmlClass in here")
                 return
             }
-            println("found $htmlClass")
             val newsEntry = newsContainer.first()
             val titleAndLink = newsEntry?.getElementsByTag("a")?.first()
             val url = titleAndLink?.attr("href") ?: ""
             val title = titleAndLink?.wholeOwnText() ?: ""
             val overline = newsEntry?.getElementsByClass("css-169b1y4")?.first()?.text() ?: ""
-            val date = div.parent()?.parent()?.parent()?.attr("data-tb-region") ?: ""
+            val date = div.parent()?.parent()?.parent()?.getElementsByClass("eamwxa70")?.first()?.wholeOwnText() ?: ""
             newsList.add(
-                News(
+                NewsFactory.createNews(
                     title = title,
                     url = "$baseUrl$url",
                     provider = "T-Online",
                     overline = overline,
-                    date = date
+                    displayDate=date,
+                    dateString = date,
+                    datePattern = "eeee, dd.MM"
                 )
             )
         }
