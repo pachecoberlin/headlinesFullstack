@@ -6,10 +6,10 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.http.content.*
-import io.ktor.server.netty.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.tomcat.*
 import scraper.Scraper
 
 val collection = mutableListOf(
@@ -22,7 +22,7 @@ fun main() {
     val port = System.getenv("PORT")?.toInt() ?: 9090
     val scraper = Scraper()
     scraper.getNews()
-    embeddedServer(Netty, port) {
+    embeddedServer(Tomcat, port) {
         serverSettings()
         routings(scraper)
     }.start(wait = true)
