@@ -53,6 +53,7 @@ kotlin {
                 implementation("io.ktor:ktor-server-cors:$ktorVersion")
                 implementation("io.ktor:ktor-server-compression:$ktorVersion")
                 implementation("io.ktor:ktor-server-core-jvm:$ktorVersion")
+//                implementation("io.ktor:ktor-server-netty:$ktorVersion")
                 implementation("io.ktor:ktor-server-tomcat:$ktorVersion")
                 implementation("ch.qos.logback:logback-classic:$logbackVersion")
 //                implementation("org.litote.kmongo:kmongo-coroutine-serialization:$kmongoVersion")
@@ -63,7 +64,7 @@ kotlin {
                 implementation("io.ktor:ktor-server-html-builder:$ktorVersion")
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-css:$kotlin_css_version")
 
-
+//                implementation("io.reactivex.rxjava2:rxkotlin:3.0.1")
             }
         }
 

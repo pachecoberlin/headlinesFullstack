@@ -6,10 +6,13 @@ import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.engine.*
 import io.ktor.server.http.content.*
+import io.ktor.server.netty.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.server.tomcat.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import scraper.Scraper
 
 val collection = mutableListOf(
@@ -19,13 +22,17 @@ val collection = mutableListOf(
 )
 
 fun main() {
-    val port = System.getenv("PORT")?.toInt() ?: 9090
-    val scraper = Scraper()
-    scraper.getNews()
-    embeddedServer(Tomcat, port) {
-        serverSettings()
-        routings(scraper)
-    }.start(wait = true)
+    runBlocking {
+        val port = System.getenv("PORT")?.toInt() ?: 9090
+        val scraper = Scraper()
+        launch(Dispatchers.IO) {
+            scraper.getNews()
+        }
+        embeddedServer(Netty, port) {
+            serverSettings()
+            routings(scraper)
+        }.start(wait = true)
+    }
 }
 
 private fun Application.routings(scraper: Scraper) {
@@ -56,11 +63,6 @@ private fun Application.routings(scraper: Scraper) {
         }
         route(News.path) {
             get { call.respond(scraper.relevantNews) }
-            post {
-                val filterString = call.receive<String>()
-                scraper.relevantNews.add(News(filterString, filterString, filterString))
-                call.respond(HttpStatusCode.OK)
-            }
             get("/{filterstring}") {
                 call.respond(scraper.filterBy(call.parameters["filterstring"]))
             }

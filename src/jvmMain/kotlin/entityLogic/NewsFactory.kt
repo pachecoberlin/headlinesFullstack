@@ -20,7 +20,7 @@ class NewsFactory {
         ): News {
             val dateStringClean = dateString.replace(" ", "").replace("-", "").trim()
             val datePatternClean = datePattern.replace(" ", "").trim()
-            return News(
+            val news = News(
                 title = title.trim(),
                 url = url,
                 provider = provider,
@@ -29,10 +29,11 @@ class NewsFactory {
                 text = text,
                 breadcrumbs = breadcrumbs,
                 author = author,
-                displayDate = displayDate,
-                dateString = dateStringClean,
                 datePattern = datePatternClean
             )
+            news.dateString=dateStringClean
+            news.displayDate=displayDate
+            return news
         }
     }
 }

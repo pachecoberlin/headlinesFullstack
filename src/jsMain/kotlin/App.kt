@@ -44,7 +44,7 @@ val App = FC<Props> { props ->
                         href = item.url
                         target = AnchorTarget._blank
                         div {
-                            +item.dateString
+                            +item.displayDate
                         }
                         div {
                             +item.provider

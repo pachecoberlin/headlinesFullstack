@@ -12,16 +12,16 @@ data class News(
     val text: String = "",
     val breadcrumbs: List<String> = emptyList(),
     val author: String = "",
-    val displayDate: String = "",
-    val dateString: String = "",
     val datePattern: String = ""
 ) {
+    var displayDate: String = ""
+    var dateString: String = ""
 
     fun contains(searchText: String): Boolean {
-        return this.toString().contains(searchText, true)
+        return relevantText().contains(searchText, true)
     }
 
-    override fun toString(): String {
+    fun relevantText(): String {
         return "$title$overline$teaser$text$breadcrumbs$author"
     }
 
