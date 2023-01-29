@@ -20,14 +20,7 @@ class NewsTime {
                 e.printStackTrace()
                 return fallBackDateTime
             }
-            val temporalAccessor = try {
-                pattern.parse(dateString)
-            } catch (ex: DateTimeParseException) {
-                if (!dateString.isEmpty()) {
-                    ex.printStackTrace()
-                }
-                return fallBackDateTime
-            }
+            val temporalAccessor = pattern.parse(dateString)
             return LocalDateTime.of(createLocalDate(temporalAccessor), createLocalTime(temporalAccessor))
         }
 

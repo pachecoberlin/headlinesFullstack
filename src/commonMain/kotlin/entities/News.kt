@@ -22,7 +22,7 @@ data class News(
     }
 
     override fun toString(): String {
-        return "$title$provider$overline$teaser$text$breadcrumbs$author"
+        return "$title$overline$teaser$text$breadcrumbs$author"
     }
 
     val id: Int = hashCode()

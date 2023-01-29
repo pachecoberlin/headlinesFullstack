@@ -45,6 +45,7 @@ private val News.dateCache: LocalDateTime
         return try {
             NewsTime.createLocalDateTime(datePattern, dateString)
         } catch (e: Exception) {
+            println("For provider: $provider")
             e.printStackTrace()
             NewsTime.fallBackDateTime
         }
