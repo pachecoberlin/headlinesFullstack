@@ -35,7 +35,7 @@ class Tagesschau {
                     url = "$baseUrl$url",
                     provider = "Tagesschau",
                     displayDate=date,
-                    dateString = time.removeSuffix(" Uhr - ") + date,
+                    dateString = time + date,
                     datePattern = "HH:mmeeee, dd. MMMM yyyy"
                 )
             )

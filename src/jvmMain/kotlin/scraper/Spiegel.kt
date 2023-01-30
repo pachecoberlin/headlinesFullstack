@@ -38,7 +38,7 @@ class Spiegel {
                     url = url,
                     provider = "Spiegel",
                     displayDate = date,
-                    dateString = date.removeSuffix(" Uhr"),
+                    dateString = date,
                     datePattern = "[d. MMMM, ]HH.mm",
                 )
             )

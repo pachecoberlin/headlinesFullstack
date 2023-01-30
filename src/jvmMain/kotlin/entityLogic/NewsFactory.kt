@@ -1,6 +1,7 @@
 package entityLogic
 
 import entities.News
+import io.ktor.util.*
 import java.time.LocalDateTime
 
 class NewsFactory {
@@ -18,7 +19,7 @@ class NewsFactory {
             dateString: String = "",
             datePattern: String = ""
         ): News {
-            val dateStringClean = dateString.replace(" ", "").replace("-", "").trim()
+            val dateStringClean = dateString.replace(" ", "").replace("-", "").replace("Uhr","").trim()
             val datePatternClean = datePattern.replace(" ", "").trim()
             val news = News(
                 title = title.trim(),
@@ -31,8 +32,8 @@ class NewsFactory {
                 author = author,
                 datePattern = datePatternClean
             )
-            news.dateString=dateStringClean
-            news.displayDate=displayDate
+            news.dateString = dateStringClean
+            news.displayDate = displayDate
             return news
         }
     }
@@ -46,8 +47,10 @@ private val News.dateCache: LocalDateTime
         return try {
             NewsTime.createLocalDateTime(datePattern, dateString)
         } catch (e: Exception) {
-            println("For provider: $provider")
-            e.printStackTrace()
+            if (dateString.isNotEmpty()) {
+                println("For provider: $provider")
+                e.printStackTrace()
+            }
             NewsTime.fallBackDateTime
         }
     }
