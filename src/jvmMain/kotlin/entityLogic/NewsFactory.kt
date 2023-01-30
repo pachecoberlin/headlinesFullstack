@@ -19,7 +19,9 @@ class NewsFactory {
             dateString: String = "",
             datePattern: String = ""
         ): News {
-            val dateStringClean = dateString.replace(" ", "").replace("-", "").replace("Uhr","").trim()
+            var dateStringClean = dateString.trim()
+            listOf("Uhr","Min."," ","-","vor")
+                .forEach { dateStringClean=dateStringClean.replace(it,"") }
             val datePatternClean = datePattern.replace(" ", "").trim()
             val news = News(
                 title = title.trim(),

@@ -30,20 +30,17 @@ val collection = mutableListOf(
 
 fun main() {
     runBlocking {
-        val port = System.getenv("PORT")?.toInt() ?: 9090
         launch(Dispatchers.IO) {
             Scraper.getNews()
         }
-        embeddedServer(Tomcat, environment(port)).start(wait = true)
+        embeddedServer(Tomcat, environment()).start(wait = true)
     }
 }
 
-private fun environment(port2: Int): ApplicationEngineEnvironment {
+private fun environment(): ApplicationEngineEnvironment {
     return applicationEngineEnvironment {
         log = LoggerFactory.getLogger("ktor.application")
-        connector {
-            port = port2
-        }
+//        connector { port = 8080 } //for unsecured HTTP access
         setSslConnector()
         module(Application::serverSettings)
         module(Application::routings)
@@ -74,7 +71,7 @@ private fun getKeystore(): Triple<File, KeyStore, CharArray> {
 
 private fun Application.routings() {
     routing {
-        get("/") {
+        get("/SoerensFastNewsScraper") {
             call.respondText(
                 this::class.java.classLoader.getResource("index.html")!!.readText(),
                 ContentType.Text.Html
