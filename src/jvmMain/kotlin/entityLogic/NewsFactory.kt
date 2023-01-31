@@ -1,11 +1,13 @@
 package entityLogic
 
 import entities.News
-import io.ktor.util.*
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 class NewsFactory {
     companion object {
+        @Suppress("UNUSED_PARAMETER")
         fun createNews(
             title: String = "",
             url: String = "",
@@ -20,8 +22,8 @@ class NewsFactory {
             datePattern: String = ""
         ): News {
             var dateStringClean = dateString.trim()
-            listOf("Uhr","Min."," ","-","vor")
-                .forEach { dateStringClean=dateStringClean.replace(it,"") }
+            listOf("Uhr", "Min.", " ", "-", "vor")
+                .forEach { dateStringClean = dateStringClean.replace(it, "") }
             val datePatternClean = datePattern.replace(" ", "").trim()
             val news = News(
                 title = title.trim(),
@@ -35,7 +37,7 @@ class NewsFactory {
                 datePattern = datePatternClean
             )
             news.dateString = dateStringClean
-            news.displayDate = displayDate
+            news.displayDate = news.date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm", Locale.GERMAN)).toString()
             return news
         }
     }

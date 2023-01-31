@@ -40,7 +40,7 @@ fun main() {
 private fun environment(): ApplicationEngineEnvironment {
     return applicationEngineEnvironment {
         log = LoggerFactory.getLogger("ktor.application")
-//        connector { port = 8080 } //for unsecured HTTP access
+//        connector { port = 9090 } //for unsecured HTTP access
         setSslConnector()
         module(Application::serverSettings)
         module(Application::routings)
