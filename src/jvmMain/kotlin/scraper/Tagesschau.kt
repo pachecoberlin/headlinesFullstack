@@ -36,7 +36,7 @@ class Tagesschau {
                     provider = "Tagesschau",
                     displayDate=date,
                     dateString = time + date,
-                    datePattern = "HH:mmeeee, dd. MMMM yyyy"
+                    datePattern = "HH:mmeeee, dd. MMMM yyyy",
                 )
             )
         }

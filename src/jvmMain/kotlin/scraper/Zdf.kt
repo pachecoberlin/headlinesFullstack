@@ -45,7 +45,7 @@ class Zdf {
                     text = text,
                     displayDate = displayDate,
                     dateString = "$time$date",
-                    datePattern = "HH:mm[,dd.MM.yyyy]"
+                    datePattern = "HH:mm[,dd.MM.yyyy]",
                 )
             )
         }

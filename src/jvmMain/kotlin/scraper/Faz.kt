@@ -34,8 +34,9 @@ class Faz {
             val overline = newsEntry?.getElementsByClass("ticker-news-super")?.first()?.wholeOwnText() ?: ""
             val title = titleAndLink?.wholeOwnText() ?: ""
             val author = newsEntry?.getElementsByClass("ticker-news-author")?.first()?.wholeOwnText() ?: ""
-            var displayDate = newsEntry?.getElementsByClass("ticker-news-time")?.first()?.wholeOwnText() ?: ""
+            val displayDate = newsEntry?.getElementsByClass("ticker-news-time")?.first()?.wholeOwnText() ?: ""
             val date = if (displayDate.length >= 16) displayDate else displayDate.substring(0..15)
+            val (text, source) = getArticleText(url)
             newsList.add(
                 NewsFactory.createNews(
                     title = title,
@@ -46,8 +47,17 @@ class Faz {
                     displayDate = displayDate,
                     dateString = date,
                     datePattern = "dd.MM.yyyy HH:mm",
+                    text=text,
+                    source=source,
                 )
             )
+        }
+
+        private fun getArticleText(url: String): Pair<String, String> {
+            val document = Jsoup.connect(url).get()
+            val text = document.select(".atc-Text").first()?.wholeText() ?: ""
+            val source = document.select(".atc-Footer_Quelle").first()?.wholeOwnText()?.removePrefix("Quelle:") ?: ""
+            return text to source
         }
     }
 }

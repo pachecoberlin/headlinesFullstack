@@ -42,7 +42,7 @@ class Tonline {
                     overline = overline,
                     displayDate=date,
                     dateString = date,
-                    datePattern = "eeee, dd.MM"
+                    datePattern = "eeee, dd.MM",
                 )
             )
         }

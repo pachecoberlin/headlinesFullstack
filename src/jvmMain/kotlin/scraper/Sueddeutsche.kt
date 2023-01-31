@@ -2,7 +2,6 @@ package scraper
 
 import entities.News
 import entityLogic.NewsFactory
-import kotlinx.css.time
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
@@ -52,7 +51,7 @@ class Sueddeutsche {
                     author = author,
                     displayDate = date,
                     dateString = date,
-                    datePattern = "yyyy-MM-dd HH:mm:ss"
+                    datePattern = "yyyy-MM-dd HH:mm:ss",
 //                    datePattern = "[dd.MM.yyyy | ][HH:]m"
                 )
             )

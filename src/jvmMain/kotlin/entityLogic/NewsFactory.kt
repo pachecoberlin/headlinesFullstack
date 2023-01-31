@@ -7,7 +7,6 @@ import java.util.*
 
 class NewsFactory {
     companion object {
-
         fun createNews(
             title: String = "",
             url: String = "",
@@ -19,7 +18,8 @@ class NewsFactory {
             author: String = "",
             @Suppress("UNUSED_PARAMETER") displayDate: String = "",
             dateString: String = "",
-            datePattern: String = ""
+            datePattern: String = "",
+            source: String = "",
         ): News {
             var dateStringClean = dateString.trim()
             var datePatternClean = datePattern.trim()
@@ -38,7 +38,8 @@ class NewsFactory {
                 breadcrumbs = breadcrumbs,
                 author = author,
                 datePattern = datePatternClean,
-                dateString = dateStringClean
+                dateString = dateStringClean,
+                source = source,
             )
             news.displayDate = news.date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm", Locale.GERMAN)).toString()
             return news

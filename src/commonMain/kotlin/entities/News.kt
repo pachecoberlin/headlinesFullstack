@@ -14,7 +14,8 @@ data class News(
     val breadcrumbs: List<String> = emptyList(),
     val author: String = "",
     val datePattern: String = "",
-    val dateString: String = ""
+    val dateString: String = "",
+    val source: String = "",
 ) {
     var displayDate: String = ""
 
@@ -23,7 +24,7 @@ data class News(
     }
 
     private fun relevantText(): String {
-        return "$title$overline$teaser$text$breadcrumbs$author"
+        return "$title$overline$teaser$text$breadcrumbs$author$source"
     }
 
     override fun equals(other: Any?): Boolean {
