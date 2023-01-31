@@ -2,6 +2,7 @@ package scraper
 
 import entities.News
 import entityLogic.NewsFactory
+import kotlinx.css.time
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
@@ -34,12 +35,15 @@ class Sueddeutsche {
             val title = newsEntry?.getElementsByClass("entrylist__title")?.first()?.text() ?: ""
             val author = newsEntry?.getElementsByClass("entrylist__author")?.first()?.text() ?: ""
             val teaser = newsEntry?.getElementsByClass("entrylist__detail")?.first()?.wholeOwnText() ?: ""
-            val date = newsEntry?.getElementsByClass("entrylist__time")?.first()?.wholeOwnText() ?: ""
+//            val date = newsEntry?.getElementsByClass("entrylist__time")?.first()?.wholeOwnText() ?: ""
             val breadcrumbs = newsEntry?.getElementsByClass("breadcrumb-list__item")?.map { it.text() } ?: emptyList()
+            val (text,date) = getArticleText(url)
+
 
             newsList.add(
                 NewsFactory.createNews(
                     title = title,
+                    text = text,
                     url = url,
                     provider = "Süddeutsche",
                     overline = overline,
@@ -48,9 +52,16 @@ class Sueddeutsche {
                     author = author,
                     displayDate = date,
                     dateString = date,
-                    datePattern = "[dd.MM.yyyy | ][HH:]m"
+                    datePattern = "yyyy-MM-dd HH:mm:ss"
+//                    datePattern = "[dd.MM.yyyy | ][HH:]m"
                 )
             )
+        }
+
+        private fun getArticleText(url: String): Pair<String, String> {
+            val document = Jsoup.connect(url).get()
+            return (document.select("div[itemprop=\"articleBody\"]")
+                .first()?.wholeText() ?: "") to document.select("time").attr("datetime")
         }
     }
 }
