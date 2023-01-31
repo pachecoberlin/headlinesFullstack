@@ -7,7 +7,7 @@ import java.util.*
 
 class NewsFactory {
     companion object {
-        @Suppress("UNUSED_PARAMETER")
+
         fun createNews(
             title: String = "",
             url: String = "",
@@ -17,14 +17,17 @@ class NewsFactory {
             text: String = "",
             breadcrumbs: List<String> = emptyList(),
             author: String = "",
-            displayDate: String = "",
+            @Suppress("UNUSED_PARAMETER") displayDate: String = "",
             dateString: String = "",
             datePattern: String = ""
         ): News {
             var dateStringClean = dateString.trim()
+            var datePatternClean = datePattern.trim()
             listOf("Uhr", "Min.", " ", "-", "vor")
-                .forEach { dateStringClean = dateStringClean.replace(it, "") }
-            val datePatternClean = datePattern.replace(" ", "").trim()
+                .forEach {
+                    dateStringClean = dateStringClean.replace(it, "")
+                    datePatternClean = datePatternClean.replace(it, "")
+                }
             val news = News(
                 title = title.trim(),
                 url = url,
@@ -34,9 +37,9 @@ class NewsFactory {
                 text = text,
                 breadcrumbs = breadcrumbs,
                 author = author,
-                datePattern = datePatternClean
+                datePattern = datePatternClean,
+                dateString = dateStringClean
             )
-            news.dateString = dateStringClean
             news.displayDate = news.date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm", Locale.GERMAN)).toString()
             return news
         }
@@ -53,6 +56,7 @@ private val News.dateCache: LocalDateTime
         } catch (e: Exception) {
             if (dateString.isNotEmpty()) {
                 println("For provider: $provider")
+                println(e.localizedMessage)
                 e.printStackTrace()
             }
             NewsTime.fallBackDateTime

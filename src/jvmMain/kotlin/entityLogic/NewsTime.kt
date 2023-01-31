@@ -19,7 +19,7 @@ class NewsTime {
                 e.printStackTrace()
                 return fallBackDateTime
             }
-            val temporalAccessor = pattern.parse(dateString)
+            val temporalAccessor = pattern.parse(if (dateString == "60") "59" else dateString)
             return LocalDateTime.of(createLocalDate(temporalAccessor), createLocalTime(temporalAccessor))
         }
 

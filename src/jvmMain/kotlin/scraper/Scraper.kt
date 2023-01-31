@@ -22,9 +22,17 @@ class Scraper {
             Spiegel.getNews(newsList)
             Tonline.getNews(newsList)
             TableMedia.getNews(newsList)
-            relevantNews.addAll(newsList.parallelStream().filter { it.relevant }.toList())
+            updateNews(newsList)
+
             delay(1_800_000)
             latestNews()
+        }
+
+        private fun updateNews(newsList: MutableList<News>) {
+            val oldNews = relevantNews.toSet()
+            relevantNews.clear()
+            relevantNews.addAll(newsList.parallelStream().filter { it.relevant }.toList())
+            relevantNews.addAll(oldNews)
         }
 
         fun filterBy(s: String?): Collection<News> {

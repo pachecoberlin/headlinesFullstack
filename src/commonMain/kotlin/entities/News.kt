@@ -2,6 +2,7 @@ package entities
 
 import kotlinx.serialization.Serializable
 
+@Suppress("EqualsOrHashCode")
 @Serializable
 data class News(
     val title: String = "",
@@ -12,17 +13,25 @@ data class News(
     val text: String = "",
     val breadcrumbs: List<String> = emptyList(),
     val author: String = "",
-    val datePattern: String = ""
+    val datePattern: String = "",
+    val dateString: String = ""
 ) {
     var displayDate: String = ""
-    var dateString: String = ""
 
     fun contains(searchText: String): Boolean {
         return relevantText().contains(searchText, true)
     }
 
-    fun relevantText(): String {
+    private fun relevantText(): String {
         return "$title$overline$teaser$text$breadcrumbs$author"
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return if (other is News) {
+            other.url == url
+        } else {
+            false
+        }
     }
 
     val id: Int = hashCode()
