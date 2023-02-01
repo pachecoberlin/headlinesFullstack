@@ -6,17 +6,10 @@ import entityLogic.relevant
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
-class Sueddeutsche {
+class Sueddeutsche : Scraper {
     companion object {
         private const val htmlClass = "entrylist__entry"
         private const val url = "https://www.sueddeutsche.de/news"
-
-        fun getNews(newsList: MutableList<News>) {
-            println("Scraping: $url")
-            Jsoup.connect(url).get()
-                .select(".$htmlClass")
-                .forEach { parseToHeadline(it, newsList) }
-        }
 
         private fun parseToHeadline(div: Element, newsList: MutableList<News>) {
             val newsContainer = div.getElementsByClass(htmlClass)
@@ -28,7 +21,6 @@ class Sueddeutsche {
                 System.err.println("No tag with class:$htmlClass in here")
                 return
             }
-
             val newsEntry = newsContainer.first()
             val url = newsEntry?.getElementsByClass("entrylist__link")?.first()?.attr("href") ?: ""
             val overline = newsEntry?.getElementsByClass("entrylist__overline")?.first()?.text() ?: ""
@@ -64,5 +56,13 @@ class Sueddeutsche {
             return (document.select("div[itemprop=\"articleBody\"]")
                 .first()?.wholeText() ?: "") to document.select("time").attr("datetime")
         }
+    }
+
+    override fun getNews(newsList: MutableList<News>): List<News> {
+        println("Scraping: $url")
+        Jsoup.connect(url).get()
+            .select(".$htmlClass")
+            .forEach { parseToHeadline(it, newsList) }
+        return newsList
     }
 }

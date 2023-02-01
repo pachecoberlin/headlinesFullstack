@@ -6,18 +6,11 @@ import entityLogic.relevant
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
-class Tonline {
+class Tonline : Scraper {
     companion object {
         private const val htmlClass = "einr7x61"
         private const val baseUrl = "https://www.t-online.de"
         private const val url = "$baseUrl/schlagzeilen/"
-
-        fun getNews(newsList: MutableList<News>) {
-            println("Scraping: $url")
-            Jsoup.connect(url).get()
-                .select(".$htmlClass")
-                .forEach { parseToHeadline(it, newsList) }
-        }
 
         private fun parseToHeadline(div: Element, newsList: MutableList<News>) {
             val newsContainer = div.getElementsByClass(htmlClass)
@@ -61,5 +54,13 @@ class Tonline {
             text += subtitles
             return text to authors
         }
+    }
+
+    override fun getNews(newsList: MutableList<News>): List<News> {
+        println("Scraping: $url")
+        Jsoup.connect(url).get()
+            .select(".$htmlClass")
+            .forEach { parseToHeadline(it, newsList) }
+        return newsList
     }
 }

@@ -7,22 +7,11 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 
-class Tagesschau {
+class Tagesschau : Scraper {
     companion object {
         private const val htmlClass = "boxCon"
         private const val baseUrl = "https://www.tagesschau.de"
         private const val url = "$baseUrl/allemeldungen/"
-
-        fun getNews(newsList: MutableList<News>) {
-            println("Scraping: $url")
-            Jsoup.connect(url).get()
-                .select(".$htmlClass")
-                .forEach { container ->
-                    container.getElementsByTag("li").forEach { li ->
-                        parseToHeadline(li, newsList)
-                    }
-                }
-        }
 
         private fun parseToHeadline(li: Element, newsList: MutableList<News>) {
             val anchor = li.getElementsByTag("a")
@@ -60,5 +49,17 @@ class Tagesschau {
             val author = document.select(".authorline").first()?.wholeOwnText() ?: ""
             return text to author
         }
+    }
+
+    override fun getNews(newsList: MutableList<News>): List<News> {
+        println("Scraping: $url")
+        Jsoup.connect(url).get()
+            .select(".$htmlClass")
+            .forEach { container ->
+                container.getElementsByTag("li").forEach { li ->
+                    parseToHeadline(li, newsList)
+                }
+            }
+        return newsList
     }
 }

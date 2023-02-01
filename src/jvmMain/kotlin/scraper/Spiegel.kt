@@ -6,16 +6,9 @@ import entityLogic.relevant
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
-class Spiegel {
+class Spiegel : Scraper {
     companion object {
         private const val url = "https://www.spiegel.de/schlagzeilen/"
-
-        fun getNews(newsList: MutableList<News>) {
-            println("Scraping: $url")
-            Jsoup.connect(url).get()
-                .getElementsByTag("article")
-                .forEach { parseToHeadline(it, newsList) }
-        }
 
         private fun parseToHeadline(div: Element, newsList: MutableList<News>) {
             val anchor = div.getElementsByTag("a")
@@ -27,12 +20,10 @@ class Spiegel {
                 System.err.println("No anchor tag in here")
                 return
             }
-
             val date = div.getElementsByClass("items-end").first()?.firstElementChild()?.wholeOwnText() ?: ""
             val url = anchor.attr("href")
             val title = anchor.attr("title")
             //TODO val author = they are there
-
             val news = NewsFactory.createNews(
                 title = title,
                 url = url,
@@ -45,5 +36,13 @@ class Spiegel {
             news.text = Jsoup.connect(url).get().getElementsByTag("article").first()?.wholeText() ?: ""
             newsList.add(news)
         }
+    }
+
+    override fun getNews(newsList: MutableList<News>): List<News> {
+        println("Scraping: $url")
+        Jsoup.connect(url).get()
+            .getElementsByTag("article")
+            .forEach { parseToHeadline(it, newsList) }
+        return newsList
     }
 }

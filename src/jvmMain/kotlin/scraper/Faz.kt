@@ -6,17 +6,10 @@ import entityLogic.relevant
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
-class Faz {
+class Faz : Scraper {
     companion object {
         private const val htmlClass = "ticker-news-item"
         private const val url = "https://www.faz.net/faz-live"
-
-        fun getNews(newsList: MutableList<News>) {
-            println("Scraping: $url")
-            Jsoup.connect(url).get()
-                .select(".$htmlClass")
-                .forEach { parseToHeadline(it, newsList) }
-        }
 
         private fun parseToHeadline(div: Element, newsList: MutableList<News>) {
             val newsContainer = div.getElementsByClass(htmlClass)
@@ -60,5 +53,13 @@ class Faz {
             val source = document.select(".atc-Footer_Quelle").first()?.wholeOwnText()?.removePrefix("Quelle:") ?: ""
             return text to source
         }
+    }
+
+    override fun getNews(newsList: MutableList<News>): List<News> {
+        println("Scraping: ${url}")
+        Jsoup.connect(url).get()
+            .select(".${htmlClass}")
+            .forEach { parseToHeadline(it, newsList) }
+        return newsList
     }
 }

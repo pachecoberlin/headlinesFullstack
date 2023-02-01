@@ -6,19 +6,10 @@ import entityLogic.relevant
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
-class Zdf {
+class Zdf : Scraper {
     companion object {
         private const val htmlClass = "container"
         private const val url = "https://www.zdf.de/nachrichten/nachrichtenticker-100.html"
-
-        fun getNews(newsList: MutableList<News>) {
-            println("Scraping: $url")
-            Jsoup.connect(url).get()
-                .select(".$htmlClass")
-                .forEach { container ->
-                    parseToHeadline(container, newsList)
-                }
-        }
 
         private fun parseToHeadline(div: Element, newsList: MutableList<News>) {
             val newsContainer = div.getElementsByClass(htmlClass)
@@ -49,5 +40,15 @@ class Zdf {
             )
             if (news.relevant) newsList.add(news)
         }
+    }
+
+    override fun getNews(newsList: MutableList<News>): List<News> {
+        println("Scraping: $url")
+        Jsoup.connect(url).get()
+            .select(".$htmlClass")
+            .forEach { container ->
+                parseToHeadline(container, newsList)
+            }
+        return newsList
     }
 }
