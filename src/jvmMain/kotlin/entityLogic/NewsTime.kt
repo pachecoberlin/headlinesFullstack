@@ -10,6 +10,7 @@ import java.util.*
 
 class NewsTime {
     companion object {
+        const val dateTimePattern = "dd.MM.yyyy HH:mm"
         val fallBackDateTime: LocalDateTime = LocalDateTime.now().minusMinutes(5)
         internal fun createLocalDateTime(datePattern: String, dateString: String): LocalDateTime {
             //TODO think about the fallbacktime, it's good enough for sueddeutsche
