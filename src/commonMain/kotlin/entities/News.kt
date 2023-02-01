@@ -13,8 +13,8 @@ data class News(
     val text: String = "",
     val breadcrumbs: List<String> = emptyList(),
     val author: String = "",
-    val datePattern: String = "",
-    val dateString: String = "",
+    var datePattern: String = "",
+    var dateString: String = "",
     val source: String = "",
 ) {
     var displayDate: String = ""
