@@ -2,6 +2,7 @@ package scraper
 
 import entities.News
 import entityLogic.NewsFactory
+import entityLogic.relevant
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
@@ -34,27 +35,28 @@ class Sueddeutsche {
             val title = newsEntry?.getElementsByClass("entrylist__title")?.first()?.text() ?: ""
             val author = newsEntry?.getElementsByClass("entrylist__author")?.first()?.text() ?: ""
             val teaser = newsEntry?.getElementsByClass("entrylist__detail")?.first()?.wholeOwnText() ?: ""
-//            val date = newsEntry?.getElementsByClass("entrylist__time")?.first()?.wholeOwnText() ?: ""
+            val date = newsEntry?.getElementsByClass("entrylist__time")?.first()?.wholeOwnText() ?: ""
             val breadcrumbs = newsEntry?.getElementsByClass("breadcrumb-list__item")?.map { it.text() } ?: emptyList()
-            val (text,date) = getArticleText(url)
-
-
-            newsList.add(
-                NewsFactory.createNews(
-                    title = title,
-                    text = text,
-                    url = url,
-                    provider = "Süddeutsche",
-                    overline = overline,
-                    teaser = teaser,
-                    breadcrumbs = breadcrumbs,
-                    author = author,
-                    displayDate = date,
-                    dateString = date,
-                    datePattern = "yyyy-MM-dd HH:mm:ss",
-//                    datePattern = "[dd.MM.yyyy | ][HH:]m"
-                )
+            val news = NewsFactory.createNews(
+                title = title,
+                url = url,
+                provider = "Süddeutsche",
+                overline = overline,
+                teaser = teaser,
+                breadcrumbs = breadcrumbs,
+                author = author,
+                displayDate = date,
+                dateString = date,
+//                datePattern = "yyyy-MM-dd HH:mm:ss",
+                datePattern = "[dd.MM.yyyy | ][HH:]m"
             )
+            if (!news.relevant) return
+            val (text, date2) = getArticleText(url)
+            news.text = text
+            news.displayDate = date2
+            news.dateString = date2
+            news.datePattern = "yyyy-MM-dd HH:mm:ss"
+            newsList.add(news)
         }
 
         private fun getArticleText(url: String): Pair<String, String> {

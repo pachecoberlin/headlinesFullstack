@@ -2,6 +2,7 @@ package scraper
 
 import entities.News
 import entityLogic.NewsFactory
+import entityLogic.relevant
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
@@ -37,17 +38,16 @@ class Zdf {
             val displayDate = div.parent()?.parent()?.parent()?.getElementsByClass("b-news-ticker-separator")?.first()?.wholeOwnText() ?: ""
             val date = displayDate.trim().removePrefix("Gestern").removePrefix("Heute")
 
-            newsList.add(
-                NewsFactory.createNews(
-                    title = title,
-                    provider = "ZDF",
-                    overline = overline,
-                    text = text,
-                    displayDate = displayDate,
-                    dateString = "$time$date",
-                    datePattern = "HH:mm[,dd.MM.yyyy]",
-                )
+            val news = NewsFactory.createNews(
+                title = title,
+                provider = "ZDF",
+                overline = overline,
+                text = text,
+                displayDate = displayDate,
+                dateString = "$time$date",
+                datePattern = "HH:mm[,dd.MM.yyyy]",
             )
+            if (news.relevant) newsList.add(news)
         }
     }
 }

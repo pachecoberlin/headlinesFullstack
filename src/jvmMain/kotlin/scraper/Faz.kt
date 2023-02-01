@@ -2,6 +2,7 @@ package scraper
 
 import entities.News
 import entityLogic.NewsFactory
+import entityLogic.relevant
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
@@ -36,21 +37,21 @@ class Faz {
             val author = newsEntry?.getElementsByClass("ticker-news-author")?.first()?.wholeOwnText() ?: ""
             val displayDate = newsEntry?.getElementsByClass("ticker-news-time")?.first()?.wholeOwnText() ?: ""
             val date = if (displayDate.length >= 16) displayDate else displayDate.substring(0..15)
-            val (text, source) = getArticleText(url)
-            newsList.add(
-                NewsFactory.createNews(
-                    title = title,
-                    url = url,
-                    provider = "FAZ",
-                    overline = overline,
-                    author = author,
-                    displayDate = displayDate,
-                    dateString = date,
-                    datePattern = "dd.MM.yyyy HH:mm",
-                    text=text,
-                    source=source,
-                )
+            val news = NewsFactory.createNews(
+                title = title,
+                url = url,
+                provider = "FAZ",
+                overline = overline,
+                author = author,
+                displayDate = displayDate,
+                dateString = date,
+                datePattern = "dd.MM.yyyy HH:mm",
             )
+            if (!news.relevant) return
+            val (text, source) = getArticleText(url)
+            news.text = text
+            news.source = source
+            newsList.add(news)
         }
 
         private fun getArticleText(url: String): Pair<String, String> {

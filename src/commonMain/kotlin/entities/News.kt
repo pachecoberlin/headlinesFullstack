@@ -15,7 +15,7 @@ data class News(
     var author: String = "",
     var datePattern: String = "",
     var dateString: String = "",
-    val source: String = "",
+    var source: String = "",
 ) {
     var displayDate: String = ""
 

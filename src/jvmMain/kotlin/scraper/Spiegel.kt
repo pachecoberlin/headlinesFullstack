@@ -2,6 +2,7 @@ package scraper
 
 import entities.News
 import entityLogic.NewsFactory
+import entityLogic.relevant
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
@@ -32,16 +33,17 @@ class Spiegel {
             val title = anchor.attr("title")
             //TODO val author = they are there
 
-            newsList.add(
-                NewsFactory.createNews(
-                    title = title,
-                    url = url,
-                    provider = "Spiegel",
-                    displayDate = date,
-                    dateString = date,
-                    datePattern = "[d. MMMM, ]HH.mm",
-                )
+            val news = NewsFactory.createNews(
+                title = title,
+                url = url,
+                provider = "Spiegel",
+                displayDate = date,
+                dateString = date,
+                datePattern = "[d. MMMM, ]HH.mm",
             )
+            if (!news.relevant) return
+            news.text = Jsoup.connect(url).get().getElementsByTag("article").first()?.wholeText() ?: ""
+            newsList.add(news)
         }
     }
 }

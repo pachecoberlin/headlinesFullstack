@@ -39,7 +39,6 @@ class Tagesschau {
                 datePattern = "HH:mmeeee, dd. MMMM yyyy"
             )
             if (!news.relevant) return
-            println("scraping next article URL")
             val (text, author) = getArticleText(url)
             news.text = text
             news.author = author
@@ -50,18 +49,12 @@ class Tagesschau {
             anchor.attr("abs:href")
 
         private fun getArticleText(url: String): Pair<String, String> {
-            try {
-                val document = Jsoup.connect(url).get()
-
-                var text = document.select(".textabsatz").map { it.wholeText() }.reduce { a, b -> "$a\n$b" }
-                val subtitles = document.select(".meldung__subhead").map { it.wholeText() }.reduce { a, b -> "$a\n$b" }
-                text += subtitles
-                val author = document.select(".authorline").first()?.wholeOwnText() ?: ""
-                return text to author
-            } catch (ex: Exception) {
-                println()
-            }
-            return "" to ""
+            val document = Jsoup.connect(url).get()
+            var text = document.select(".textabsatz").map { it.wholeText() }.reduce { a, b -> "$a\n$b" }
+            val subtitles = document.select(".meldung__subhead").map { it.wholeText() }.reduce { a, b -> "$a\n$b" }
+            text += subtitles
+            val author = document.select(".authorline").first()?.wholeOwnText() ?: ""
+            return text to author
         }
     }
 }
