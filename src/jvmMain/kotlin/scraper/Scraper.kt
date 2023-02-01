@@ -22,7 +22,7 @@ class Scraper {
                 Zdf.getNews(newsList)
                 Spiegel.getNews(newsList)
                 Tonline.getNews(newsList)
-                TableMedia.getNews(newsList)
+//                TableMedia.getNews(newsList)
                 updateNews(newsList)
             } catch (ex: Exception) {
                 ex.printStackTrace()

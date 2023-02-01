@@ -50,8 +50,12 @@ class Tagesschau {
 
         private fun getArticleText(url: String): Pair<String, String> {
             val document = Jsoup.connect(url).get()
-            var text = document.select(".textabsatz").map { it.wholeText() }.reduce { a, b -> "$a\n$b" }
-            val subtitles = document.select(".meldung__subhead").map { it.wholeText() }.reduce { a, b -> "$a\n$b" }
+            //special case of swr.de sould be moved if swr.de scraper is implemented
+            if (url.contains("www.swr.de")) return (document.getElementsByTag("article").first()?.wholeText() ?: "") to ""
+            val paragraphs = document.select(".textabsatz").map { it.wholeText() }
+            var text = if (paragraphs.isNotEmpty()) paragraphs.reduce { a, b -> "$a\n$b" } else ""
+            val subtitlesList = document.select(".meldung__subhead").map { it.wholeText() }
+            val subtitles = if (subtitlesList.isNotEmpty()) subtitlesList.reduce { a, b -> "$a\n$b" } else ""
             text += subtitles
             val author = document.select(".authorline").first()?.wholeOwnText() ?: ""
             return text to author
