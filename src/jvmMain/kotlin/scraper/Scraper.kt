@@ -14,16 +14,19 @@ class Scraper {
         }
 
         private suspend fun latestNews() {
-            val newsList = mutableListOf<News>()
-            Sueddeutsche.getNews(newsList)
-            Faz.getNews(newsList)
-            Tagesschau.getNews(newsList)
-            Zdf.getNews(newsList)
-            Spiegel.getNews(newsList)
-            Tonline.getNews(newsList)
-            TableMedia.getNews(newsList)
-            updateNews(newsList)
-
+            try {//TODO try and catch for each and also implement interface for scrapers
+                val newsList = mutableListOf<News>()
+                Sueddeutsche.getNews(newsList)
+                Faz.getNews(newsList)
+                Tagesschau.getNews(newsList)
+                Zdf.getNews(newsList)
+                Spiegel.getNews(newsList)
+                Tonline.getNews(newsList)
+                TableMedia.getNews(newsList)
+                updateNews(newsList)
+            } catch (ex: Exception) {
+                ex.printStackTrace()
+            }
             delay(1_800_000)
             latestNews()
         }

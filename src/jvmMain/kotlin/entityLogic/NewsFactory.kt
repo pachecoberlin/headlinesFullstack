@@ -44,7 +44,7 @@ class NewsFactory {
             )
             news.displayDate = news.date.format(DateTimeFormatter.ofPattern(dateTimePattern, Locale.GERMAN)).toString()
             news.datePattern = dateTimePattern
-            news.dateString = displayDate
+            news.dateString = news.displayDate
             return news
         }
     }
