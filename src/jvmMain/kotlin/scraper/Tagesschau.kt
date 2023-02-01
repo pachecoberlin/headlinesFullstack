@@ -8,7 +8,6 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 
-@Suppress("BlockingMethodInNonBlockingContext")
 class Tagesschau : Scraper {
     companion object {
         private const val htmlClass = "boxCon"
@@ -54,15 +53,13 @@ class Tagesschau : Scraper {
         }
     }
 
-    override suspend fun getNews(newsList: MutableList<News>): List<News> {
-        println("Scraping: $url")
-        Jsoup.connect(url).get()
-            .select(".$htmlClass")
-            .forEach { container ->
-                container.getElementsByTag("li").forEach { li ->
-                    parseToHeadline(li, newsList)
-                }
-            }
-        return newsList
+    override val htmlClass: String = Tagesschau.htmlClass
+    override val tagName = ""
+    override val url: String = Tagesschau.url
+
+    override suspend fun parse(element: Element, newsList: MutableList<News>) {
+        element.getElementsByTag("li").forEach { li ->
+            parseToHeadline(li, newsList)
+        }
     }
 }

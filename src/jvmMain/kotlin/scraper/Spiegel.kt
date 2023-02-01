@@ -7,11 +7,12 @@ import kotlinx.coroutines.delay
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
-@Suppress("BlockingMethodInNonBlockingContext")
 class Spiegel : Scraper {
     companion object {
         private const val url = "https://www.spiegel.de/schlagzeilen/"
+        private const val tagName = "article"
 
+        @Suppress("BlockingMethodInNonBlockingContext")
         private suspend fun parseToHeadline(div: Element, newsList: MutableList<News>) {
             delay(3000)
             val anchor = div.getElementsByTag("a")
@@ -41,11 +42,11 @@ class Spiegel : Scraper {
         }
     }
 
-    override suspend fun getNews(newsList: MutableList<News>): List<News> {
-        println("Scraping: $url")
-        Jsoup.connect(url).get()
-            .getElementsByTag("article")
-            .forEach { parseToHeadline(it, newsList) }
-        return newsList
+    override val htmlClass: String = ""
+    override val tagName = Spiegel.tagName
+    override val url: String = Spiegel.url
+
+    override suspend fun parse(element: Element, newsList: MutableList<News>) {
+        parseToHeadline(element, newsList)
     }
 }

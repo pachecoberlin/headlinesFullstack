@@ -14,7 +14,8 @@ class ScrapeMaster {
             Tagesschau(),
             Zdf(),
             Spiegel(),
-            Tonline()
+            Tonline(),
+            Nzz(),
         )
         suspend fun getNews(): Collection<News> {
             latestNews()

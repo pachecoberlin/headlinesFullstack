@@ -7,9 +7,8 @@ import kotlinx.coroutines.delay
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
-@Suppress("BlockingMethodInNonBlockingContext")
 class Faz : Scraper {
-    companion object {
+        companion object {
         private const val htmlClass = "ticker-news-item"
         private const val url = "https://www.faz.net/faz-live"
 
@@ -58,11 +57,10 @@ class Faz : Scraper {
         }
     }
 
-    override suspend fun getNews(newsList: MutableList<News>): List<News> {
-        println("Scraping: $url")
-        Jsoup.connect(url).get()
-            .select(".${htmlClass}")
-            .forEach { parseToHeadline(it, newsList) }
-        return newsList
+    override val htmlClass = Faz.htmlClass
+    override val tagName = ""
+    override val url =Faz.url
+    override suspend fun parse(element: Element, newsList: MutableList<News>) {
+        parseToHeadline(element,newsList)
     }
 }

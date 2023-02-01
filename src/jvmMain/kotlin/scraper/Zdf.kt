@@ -3,11 +3,8 @@ package scraper
 import entities.News
 import entityLogic.NewsFactory
 import entityLogic.relevant
-import kotlinx.coroutines.delay
-import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
-@Suppress("BlockingMethodInNonBlockingContext")
 class Zdf : Scraper {
     companion object {
         private const val htmlClass = "container"
@@ -31,7 +28,7 @@ class Zdf : Scraper {
             var displayDate = ""
             val previousSibling = div.parent()?.parent()?.previousElementSibling()
             previousSibling?.let {
-                displayDate=it.wholeOwnText()
+                displayDate = it.wholeOwnText()
                 println()
             }
             val date = displayDate.trim().removePrefix("Gestern").removePrefix("Heute")
@@ -49,11 +46,11 @@ class Zdf : Scraper {
         }
     }
 
-    override suspend fun getNews(newsList: MutableList<News>): List<News> {
-        println("Scraping: $url")
-        Jsoup.connect(url).get()
-            .select(".$htmlClass")
-            .forEach { container -> parseToHeadline(container, newsList) }
-        return newsList
+    override val htmlClass: String = Zdf.htmlClass
+    override val tagName = ""
+    override val url: String = Zdf.url
+
+    override suspend fun parse(element: Element, newsList: MutableList<News>) {
+        parseToHeadline(element, newsList)
     }
 }
