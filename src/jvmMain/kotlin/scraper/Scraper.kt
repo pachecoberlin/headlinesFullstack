@@ -31,7 +31,7 @@ class Scraper {
         private fun updateNews(newsList: MutableList<News>) {
             val oldNews = relevantNews.toSet()
             relevantNews.clear()
-            relevantNews.addAll(newsList.parallelStream().filter { it.relevant }.toList())
+            relevantNews.addAll(newsList.stream().filter { it.relevant }.toList())
             relevantNews.addAll(oldNews)
         }
 
