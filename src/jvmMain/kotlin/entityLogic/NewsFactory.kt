@@ -1,6 +1,7 @@
 package entityLogic
 
 import entities.News
+import entityLogic.NewsTime.Companion.dateTimePattern
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -41,27 +42,24 @@ class NewsFactory {
                 dateString = dateStringClean,
                 source = source,
             )
-            news.displayDate = news.date.format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm", Locale.GERMAN)).toString()
+            news.displayDate = news.date.format(DateTimeFormatter.ofPattern(dateTimePattern, Locale.GERMAN)).toString()
+            news.datePattern = dateTimePattern
+            news.dateString = displayDate
             return news
         }
     }
 }
 
-val News.date: LocalDateTime
-    get() = dateCache
-
-private val News.dateCache: LocalDateTime
-    get() {
-        return try {
-            NewsTime.createLocalDateTime(datePattern, dateString)
-        } catch (e: Exception) {
-            if (dateString.isNotEmpty()) {
-                println("For provider: $provider")
-                println(e.localizedMessage)
-                e.printStackTrace()
-            }
-            NewsTime.fallBackDateTime
+private val News.date: LocalDateTime
+    get() = try {
+        NewsTime.createLocalDateTime(datePattern, dateString)
+    } catch (e: Exception) {
+        if (dateString.isNotEmpty()) {
+            println("For provider: $provider")
+            println(e.localizedMessage)
+            e.printStackTrace()
         }
+        NewsTime.fallBackDateTime
     }
 
 /**
