@@ -13,8 +13,7 @@ class Zdf : Scraper {
         private const val htmlClass = "container"
         private const val url = "https://www.zdf.de/nachrichten/nachrichtenticker-100.html"
 
-        private suspend fun parseToHeadline(div: Element, newsList: MutableList<News>) {
-            delay(3000)
+        private fun parseToHeadline(div: Element, newsList: MutableList<News>) {
             val newsContainer = div.getElementsByClass(htmlClass)
             if (newsContainer.size > 1) {
                 newsContainer.forEach { parseToHeadline(it, newsList) }
@@ -29,7 +28,12 @@ class Zdf : Scraper {
             val title = newsEntry?.getElementsByClass("normal-space")?.first()?.wholeOwnText() ?: ""
             val text = newsEntry?.getElementsByClass("panel-content")?.first()?.wholeOwnText() ?: ""
             val time = newsEntry?.getElementsByClass("teaser-time")?.first()?.wholeOwnText() ?: ""
-            val displayDate = div.parent()?.parent()?.parent()?.getElementsByClass("b-news-ticker-separator")?.first()?.wholeOwnText() ?: ""
+            var displayDate = ""
+            val previousSibling = div.parent()?.parent()?.previousElementSibling()
+            previousSibling?.let {
+                displayDate=it.wholeOwnText()
+                println()
+            }
             val date = displayDate.trim().removePrefix("Gestern").removePrefix("Heute")
 
             val news = NewsFactory.createNews(
