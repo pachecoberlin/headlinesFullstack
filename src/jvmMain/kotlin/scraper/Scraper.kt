@@ -3,5 +3,5 @@ package scraper
 import entities.News
 
 interface Scraper {
-    fun getNews(newsList: MutableList<News>): List<News>
+    suspend fun getNews(newsList: MutableList<News>): List<News>
 }

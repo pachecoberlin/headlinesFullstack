@@ -8,6 +8,7 @@ import kotlin.streams.toList
 class ScrapeMaster {
     companion object {
         val relevantNews = mutableSetOf<News>()
+        val scrapers = listOf(Sueddeutsche(), Faz(), Tagesschau(), Zdf(), Spiegel(), Tonline())
         suspend fun getNews(): Collection<News> {
             latestNews()
             return relevantNews
@@ -15,18 +16,14 @@ class ScrapeMaster {
 
         private suspend fun latestNews() {
             val newsList = mutableListOf<News>()
-            try {//TODO try and catch for each and also implement interface for scrapers
-                Sueddeutsche().getNews(newsList)
-                Faz().getNews(newsList)
-                Tagesschau().getNews(newsList)
-                Zdf().getNews(newsList)
-                Spiegel().getNews(newsList)
-                Tonline().getNews(newsList)
-//                TableMedia.getNews(newsList)
-            } catch (ex: Exception) {
-                ex.printStackTrace()
-            } finally {
-                updateNews(newsList)
+            scrapers.forEach {
+                try {
+                    it.getNews(newsList)
+                } catch (ex: Exception) {
+                    ex.printStackTrace()
+                } finally {
+                    updateNews(newsList)
+                }
             }
             delay(1_800_000)
             latestNews()

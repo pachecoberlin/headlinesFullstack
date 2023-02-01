@@ -16,7 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
-import scraper.Scraper
+import scraper.ScrapeMaster
 import java.io.File
 import java.io.FileInputStream
 import java.security.KeyStore
@@ -31,7 +31,7 @@ val collection = mutableListOf(
 fun main() {
     runBlocking {
         launch(Dispatchers.IO) {
-            Scraper.getNews()
+            ScrapeMaster.getNews()
         }
         embeddedServer(Tomcat, environment()).start(wait = true)
     }
@@ -96,9 +96,9 @@ private fun Application.routings() {
             }
         }
         route(News.path) {
-            get { call.respond(Scraper.relevantNews) }
+            get { call.respond(ScrapeMaster.relevantNews) }
             get("/{filterstring}") {
-                call.respond(Scraper.filterBy(call.parameters["filterstring"]))
+                call.respond(ScrapeMaster.filterBy(call.parameters["filterstring"]))
             }
         }
     }

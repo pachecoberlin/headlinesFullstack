@@ -3,17 +3,20 @@ package scraper
 import entities.News
 import entityLogic.NewsFactory
 import entityLogic.relevant
+import kotlinx.coroutines.delay
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 
+@Suppress("BlockingMethodInNonBlockingContext")
 class Tagesschau : Scraper {
     companion object {
         private const val htmlClass = "boxCon"
         private const val baseUrl = "https://www.tagesschau.de"
         private const val url = "$baseUrl/allemeldungen/"
 
-        private fun parseToHeadline(li: Element, newsList: MutableList<News>) {
+        private suspend fun parseToHeadline(li: Element, newsList: MutableList<News>) {
+            delay(3000)
             val anchor = li.getElementsByTag("a")
             val url = getURL(anchor)
             val title = anchor.text()
@@ -51,7 +54,7 @@ class Tagesschau : Scraper {
         }
     }
 
-    override fun getNews(newsList: MutableList<News>): List<News> {
+    override suspend fun getNews(newsList: MutableList<News>): List<News> {
         println("Scraping: $url")
         Jsoup.connect(url).get()
             .select(".$htmlClass")

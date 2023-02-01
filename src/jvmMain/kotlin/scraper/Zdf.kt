@@ -3,15 +3,18 @@ package scraper
 import entities.News
 import entityLogic.NewsFactory
 import entityLogic.relevant
+import kotlinx.coroutines.delay
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
+@Suppress("BlockingMethodInNonBlockingContext")
 class Zdf : Scraper {
     companion object {
         private const val htmlClass = "container"
         private const val url = "https://www.zdf.de/nachrichten/nachrichtenticker-100.html"
 
-        private fun parseToHeadline(div: Element, newsList: MutableList<News>) {
+        private suspend fun parseToHeadline(div: Element, newsList: MutableList<News>) {
+            delay(3000)
             val newsContainer = div.getElementsByClass(htmlClass)
             if (newsContainer.size > 1) {
                 newsContainer.forEach { parseToHeadline(it, newsList) }
@@ -42,13 +45,11 @@ class Zdf : Scraper {
         }
     }
 
-    override fun getNews(newsList: MutableList<News>): List<News> {
+    override suspend fun getNews(newsList: MutableList<News>): List<News> {
         println("Scraping: $url")
         Jsoup.connect(url).get()
             .select(".$htmlClass")
-            .forEach { container ->
-                parseToHeadline(container, newsList)
-            }
+            .forEach { container -> parseToHeadline(container, newsList) }
         return newsList
     }
 }
