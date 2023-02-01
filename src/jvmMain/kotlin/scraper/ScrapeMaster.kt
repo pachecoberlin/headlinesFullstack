@@ -8,7 +8,14 @@ import kotlin.streams.toList
 class ScrapeMaster {
     companion object {
         val relevantNews = mutableSetOf<News>()
-        val scrapers = listOf(Sueddeutsche(), Faz(), Tagesschau(), Zdf(), Spiegel(), Tonline())
+        private val scrapers = listOf(
+            Sueddeutsche(),
+            Faz(),
+            Tagesschau(),
+            Zdf(),
+            Spiegel(),
+            Tonline()
+        )
         suspend fun getNews(): Collection<News> {
             latestNews()
             return relevantNews
