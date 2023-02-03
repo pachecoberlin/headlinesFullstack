@@ -8,10 +8,10 @@ import org.jsoup.nodes.Element
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class WiWo : Scraper {
+class WiWo(path:String) : Scraper {
     override val htmlClass: String = "div[data-macro=\"teaser\"]"
     override val tagName = ""
-    override val url: String = "https://www.wiwo.de/ticker/agentur/"
+    override val url: String = "https://www.wiwo.de/$path"
 
     override suspend fun parse(element: Element, newsList: MutableList<News>) {
         val anchor = element.getElementsByTag("a").first()

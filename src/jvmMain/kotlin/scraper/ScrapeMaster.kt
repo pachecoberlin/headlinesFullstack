@@ -16,7 +16,8 @@ class ScrapeMaster {
 //            Nzz(),
             ManagerMagazin(),
             FinanzenNet(),
-            WiWo(),
+            WiWo("ticker/agentur/"),
+            WiWo("ticker/"),
         )
 
         suspend fun getNews(): Collection<News> {
