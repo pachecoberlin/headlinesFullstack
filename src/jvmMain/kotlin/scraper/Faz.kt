@@ -8,7 +8,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
 class Faz : Scraper {
-        companion object {
+    companion object {
         private const val htmlClass = "ticker-news-item"
         private const val url = "https://www.faz.net/faz-live"
 
@@ -59,8 +59,8 @@ class Faz : Scraper {
 
     override val htmlClass = Faz.htmlClass
     override val tagName = ""
-    override val url =Faz.url
+    override val url = Faz.url
     override suspend fun parse(element: Element, newsList: MutableList<News>) {
-        parseToHeadline(element,newsList)
+        parseToHeadline(element, newsList)
     }
 }

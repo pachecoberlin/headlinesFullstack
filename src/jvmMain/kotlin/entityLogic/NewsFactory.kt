@@ -14,13 +14,13 @@ class NewsFactory {
             provider: String = "",
             overline: String = "",
             teaser: String = "",
-            text: String = "",
-            breadcrumbs: List<String> = emptyList(),
-            author: String = "",
-            @Suppress("UNUSED_PARAMETER") displayDate: String = "",
             dateString: String = "",
             datePattern: String = "",
+            author: String = "",
             source: String = "",
+            text: String = "",
+            breadcrumbs: List<String> = emptyList(),
+            @Suppress("UNUSED_PARAMETER") displayDate: String = "",
         ): News {
             var dateStringClean = dateString.trim()
             var datePatternClean = datePattern.trim()

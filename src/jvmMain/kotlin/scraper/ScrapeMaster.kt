@@ -15,8 +15,9 @@ class ScrapeMaster {
             Zdf(),
             Spiegel(),
             Tonline(),
-            Nzz(),
+//            Nzz(),
         )
+
         suspend fun getNews(): Collection<News> {
             latestNews()
             return relevantNews
@@ -33,15 +34,14 @@ class ScrapeMaster {
                     updateNews(newsList)
                 }
             }
-            delay(1_800_000)
             latestNews()
         }
 
         private fun updateNews(newsList: MutableList<News>) {
             val oldNews = relevantNews.toSet()
             relevantNews.clear()
-            relevantNews.addAll(newsList.stream().filter { it.relevant }.toList())
-            relevantNews.addAll(oldNews)
+            relevantNews.addAll(newsList.filter { it.relevant })
+            relevantNews.addAll(oldNews.filter { it.relevant })
         }
 
         fun filterBy(s: String?): Collection<News> {
