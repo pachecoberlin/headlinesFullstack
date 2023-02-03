@@ -17,6 +17,7 @@ class ScrapeMaster {
             Tonline(),
 //            Nzz(),
             ManagerMagazin(),
+            FinanzenNet(),
         )
 
         suspend fun getNews(): Collection<News> {
