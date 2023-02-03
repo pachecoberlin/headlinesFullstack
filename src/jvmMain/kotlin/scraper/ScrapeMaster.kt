@@ -16,8 +16,9 @@ class ScrapeMaster {
             Spiegel(),
             Tonline(),
 //            Nzz(),
-            ManagerMagazin(),
-            FinanzenNet(),
+//            ManagerMagazin(),
+//            FinanzenNet(),
+        WiWo(),
         )
 
         suspend fun getNews(): Collection<News> {
