@@ -70,3 +70,12 @@ val News.relevant: Boolean
         val now = LocalDateTime.now()
         return date.isAfter(now.minusHours(24)) && date.isBefore(now)
     }
+
+
+fun News.updateDisplayDate(dateString: String, datePattern: String) {
+    this.dateString=dateString
+    this.datePattern=datePattern
+    displayDate = date.format(DateTimeFormatter.ofPattern(dateTimePattern, Locale.GERMAN)).toString()
+    this.datePattern = dateTimePattern
+    this.dateString = displayDate
+}

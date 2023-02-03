@@ -2,8 +2,6 @@ package scraper
 
 import entities.News
 import entityLogic.relevant
-import kotlinx.coroutines.delay
-import kotlin.streams.toList
 
 class ScrapeMaster {
     companion object {
@@ -16,9 +14,9 @@ class ScrapeMaster {
             Spiegel(),
             Tonline(),
 //            Nzz(),
-//            ManagerMagazin(),
-//            FinanzenNet(),
-        WiWo(),
+            ManagerMagazin(),
+            FinanzenNet(),
+            WiWo(),
         )
 
         suspend fun getNews(): Collection<News> {
