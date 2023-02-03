@@ -10,6 +10,7 @@ class ScrapeMaster {
             Sueddeutsche(),
             Faz(),
             Tagesschau(),
+            TagesschauWirtschaft(),
             Zdf(),
             Spiegel(),
             Tonline(),

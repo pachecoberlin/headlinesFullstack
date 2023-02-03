@@ -7,9 +7,11 @@ import kotlinx.coroutines.delay
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
+import scraper.Tagesschau.Companion.provider
 
 class Tagesschau : Scraper {
     companion object {
+        const val provider = "Tagesschau"
         private const val htmlClass = "boxCon"
         private const val baseUrl = "https://www.tagesschau.de"
         private const val url = "$baseUrl/allemeldungen/"
@@ -24,7 +26,7 @@ class Tagesschau : Scraper {
             val news = NewsFactory.createNews(
                 title = title,
                 url = url,
-                provider = "Tagesschau",
+                provider = provider,
                 displayDate = date,
                 dateString = time + date,
                 datePattern = "HH:mmeeee, dd. MMMM yyyy"
@@ -61,5 +63,36 @@ class Tagesschau : Scraper {
         element.getElementsByTag("li").forEach { li ->
             parseToHeadline(li, newsList)
         }
+    }
+}
+
+class TagesschauWirtschaft : Scraper {
+    override val htmlClass: String = "teaser__link"
+    override val tagName: String = ""
+    override val url: String = "https://www.tagesschau.de/wirtschaft/"
+
+    @Suppress("BlockingMethodInNonBlockingContext")
+    override suspend fun parse(element: Element, newsList: MutableList<News>) {
+        delay(3000)
+        val url = element.attr("abs:href") ?: ""
+        val overline = element.select(".teaser__topline").first()?.wholeOwnText() ?: ""
+        val title = element.select(".teaser__headline").first()?.wholeOwnText() ?: ""
+        val teaser = element.select(".teaser__shorttext").first()?.wholeText() ?: ""
+        val document = Jsoup.connect(url).get()
+        val datestring = document.select(".metatextline").first()?.wholeOwnText() ?: ""
+        val datePattern = "dd.MM.yyyy HH:mm"
+        val text = document.getElementsByTag("main").first()?.wholeText() ?: ""
+        val news = NewsFactory.createNews(
+            title = title,
+            url = url,
+            provider = provider,
+            overline = overline,
+            teaser = teaser,
+            text = text,
+            dateString = datestring,
+            datePattern = datePattern
+        )
+        if (!news.relevant) return
+        newsList.add(news)
     }
 }
