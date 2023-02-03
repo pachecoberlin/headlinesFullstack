@@ -24,7 +24,7 @@ class NewsFactory {
         ): News {
             var dateStringClean = dateString.trim()
             var datePatternClean = datePattern.trim()
-            listOf("Uhr", "Min.", " ", "-", "vor")
+            listOf("Uhr", "Min.", " ", "-", "vor", "\n")
                 .forEach {
                     dateStringClean = dateStringClean.replace(it, "")
                     datePatternClean = datePatternClean.replace(it, "")
