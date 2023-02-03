@@ -12,6 +12,7 @@ class ScrapeMaster {
             Tagesschau(),
             TagesschauWirtschaft(),
             Zdf(),
+            ZdfWirtschaft(),
             Spiegel(),
             Tonline(),
 //            Nzz(),
