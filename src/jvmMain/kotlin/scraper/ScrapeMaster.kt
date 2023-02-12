@@ -16,11 +16,12 @@ class ScrapeMaster {
             ZdfWirtschaft(),
             Spiegel(),
             Tonline(),
-//            Nzz(),
             ManagerMagazin(),
             FinanzenNet(),
             WiWo("ticker/agentur/"),
             WiWo("ticker/"),
+//            DerStandard(),
+//            Nzz(),
         )
 
         suspend fun getNews(): Collection<News> {
