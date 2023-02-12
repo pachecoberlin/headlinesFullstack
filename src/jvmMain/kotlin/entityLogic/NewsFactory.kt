@@ -50,7 +50,7 @@ class NewsFactory {
     }
 }
 
-private val News.date: LocalDateTime
+val News.date: LocalDateTime
     get() = try {
         NewsTime.createLocalDateTime(datePattern, dateString)
     } catch (e: Exception) {

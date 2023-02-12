@@ -14,7 +14,7 @@ class Spiegel : Scraper {
 
         @Suppress("BlockingMethodInNonBlockingContext")
         private suspend fun parseToHeadline(div: Element, newsList: MutableList<News>) {
-            delay(3000)
+            delay(1300)
             val anchor = div.getElementsByTag("a")
             if (anchor.size > 1) {
                 anchor.forEach { parseToHeadline(it, newsList) }

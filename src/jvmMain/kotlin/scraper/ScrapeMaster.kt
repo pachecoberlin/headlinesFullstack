@@ -1,11 +1,12 @@
 package scraper
 
 import entities.News
+import entityLogic.date
 import entityLogic.relevant
 
 class ScrapeMaster {
     companion object {
-        val relevantNews = mutableSetOf<News>()
+        val relevantNews = mutableSetOf<News>().toSortedSet { news1, news2 -> news2.date.compareTo(news1.date) }
         private val scrapers = listOf(
             Sueddeutsche(),
             Faz(),

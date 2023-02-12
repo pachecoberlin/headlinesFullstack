@@ -14,7 +14,7 @@ class Tonline : Scraper {
         private const val url = "$baseUrl/schlagzeilen/"
 
         private suspend fun parseToHeadline(div: Element, newsList: MutableList<News>) {
-            delay(3000)
+            delay(1300)
             val newsContainer = div.getElementsByClass(htmlClass)
             if (newsContainer.size > 1) {
                 newsContainer.forEach { parseToHeadline(it, newsList) }

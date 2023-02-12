@@ -11,6 +11,7 @@ import react.dom.html.ReactHTML.em
 import react.dom.html.ReactHTML.h1
 import react.dom.html.ReactHTML.li
 import react.dom.html.ReactHTML.ol
+import react.dom.html.ReactHTML.p
 import react.dom.html.ReactHTML.strong
 import react.useEffectOnce
 import react.useState
@@ -36,6 +37,9 @@ val App = FC<Props> { props ->
                     news = if (input.isEmpty()) getNews() else filterResults(input)
                 }
             }
+        }
+        p {
+            +"Searching through ${news.size} articles from the last 24 hours"
         }
     }
     div {

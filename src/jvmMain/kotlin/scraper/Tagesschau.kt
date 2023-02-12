@@ -17,7 +17,7 @@ class Tagesschau : Scraper {
         private const val url = "$baseUrl/allemeldungen/"
 
         private suspend fun parseToHeadline(li: Element, newsList: MutableList<News>) {
-            delay(3000)
+            delay(1300)
             val anchor = li.getElementsByTag("a")
             val url = getURL(anchor)
             val title = anchor.text()
@@ -73,7 +73,7 @@ class TagesschauWirtschaft : Scraper {
 
     @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun parse(element: Element, newsList: MutableList<News>) {
-        delay(3000)
+        delay(1300)
         val url = element.attr("abs:href") ?: ""
         val overline = element.select(".teaser__topline").first()?.wholeOwnText() ?: ""
         val title = element.select(".teaser__headline").first()?.wholeOwnText() ?: ""
