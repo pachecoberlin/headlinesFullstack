@@ -28,11 +28,13 @@ kotlin {
     jvm {
         withJava()
     }
+
     js {
         browser {
             binaries.executable()
         }
     }
+
     sourceSets {
         @Suppress("UNUSED_VARIABLE") val commonMain by getting {
             dependencies {

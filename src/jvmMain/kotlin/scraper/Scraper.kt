@@ -3,6 +3,7 @@ package scraper
 import entities.News
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import kotlin.random.Random
 
 /**
  * Only htmlClass or tagName should be used. Anyway htmlClass is used before tagName.
@@ -11,6 +12,8 @@ interface Scraper {
     val htmlClass: String
     val tagName: String
     val url: String
+    val delay: Long
+        get() = (450 + Random.nextInt(3, 300)).toLong()
 
     @Suppress("BlockingMethodInNonBlockingContext")
     suspend fun getNews(newsList: MutableList<News>): List<News> {

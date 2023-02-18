@@ -13,7 +13,7 @@ class ManagerMagazin : Scraper {
     override val url: String = "https://www.manager-magazin.de/schlagzeilen/"
 
     override suspend fun parse(element: Element, newsList: MutableList<News>) {
-        delay(500)
+        delay(delay)
         val anchor = element.getElementsByTag("a").first()
         val url = anchor?.attr("abs:href") ?: ""
         val title = anchor?.wholeText() ?: ""

@@ -66,7 +66,7 @@ class ZdfWirtschaft : Scraper {
     override suspend fun parse(element: Element, newsList: MutableList<News>) {
         if (element.select(".section-header-title").first()?.wholeOwnText()?.contains("Aktuelle Wirtschaftsnachrichten") == true)
             element.getElementsByTag("article").forEach { article ->
-            delay(1500)
+            delay(delay)
                 val anchor = article.getElementsByTag("a")
                 val url = anchor.attr("abs:href") ?: ""
                 val overline = article.select(".teaser-cat").first()?.wholeText() ?: ""

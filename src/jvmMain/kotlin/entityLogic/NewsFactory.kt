@@ -2,6 +2,7 @@ package entityLogic
 
 import entities.News
 import entityLogic.NewsTime.Companion.dateTimePattern
+import utilities.printErr
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
@@ -55,9 +56,7 @@ val News.date: LocalDateTime
         NewsTime.createLocalDateTime(datePattern, dateString)
     } catch (e: Exception) {
         if (dateString.isNotEmpty()) {
-            println("For provider: $provider")
-            println(e.localizedMessage)
-            e.printStackTrace()
+            printErr("For provider: $provider ${e.localizedMessage}")
         }
         NewsTime.fallBackDateTime
     }

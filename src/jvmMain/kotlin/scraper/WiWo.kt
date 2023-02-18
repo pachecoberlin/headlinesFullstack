@@ -28,7 +28,7 @@ class WiWo(path:String) : Scraper {
 
     @Suppress("BlockingMethodInNonBlockingContext")
     private suspend fun readArticle(url: String) = if (url.isNotEmpty()) {
-        delay(1500)
+        delay(delay)
         val document = Jsoup.connect(url).get()
         val text = document.getElementsByTag("article").first()?.wholeText() ?: ""
         val datetime = document.getElementsByTag("time").attr("datetime") ?: ""

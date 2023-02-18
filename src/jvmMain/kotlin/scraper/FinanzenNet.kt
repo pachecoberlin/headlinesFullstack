@@ -22,7 +22,7 @@ class FinanzenNet : Scraper {
         if (!news.relevant) return
         @Suppress("BlockingMethodInNonBlockingContext")
         news.text = if (url.isNotEmpty()) {
-            delay(1000)
+            delay(delay)
             Jsoup.connect(url).get().select("div[id=\"news-container\"]").first()?.wholeText() ?: ""
         } else ""
         newsList.add(news)
