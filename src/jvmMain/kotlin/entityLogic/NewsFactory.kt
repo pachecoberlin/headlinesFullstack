@@ -67,7 +67,7 @@ val News.date: LocalDateTime
 val News.relevant: Boolean
     get() {
         val now = LocalDateTime.now()
-        return date.isAfter(now.minusHours(24)) && date.isBefore(now)
+        return date.isAfter(now.minusHours(24))
     }
 
 
