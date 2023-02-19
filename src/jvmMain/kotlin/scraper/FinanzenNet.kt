@@ -3,6 +3,7 @@ package scraper
 import entities.News
 import entityLogic.NewsFactory
 import entityLogic.relevant
+import entityLogic.updateDisplayDate
 import kotlinx.coroutines.delay
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -17,14 +18,19 @@ class FinanzenNet : Scraper {
         val url = anchor?.attr("abs:href") ?: ""
         val title = anchor?.wholeText() ?: ""
         val dateString = element.child(0).wholeOwnText() ?: ""
-        val datePattern = "HH:mm"
+        val datePattern = if (dateString.contains(":")) "HH:mm" else "dd.MM.yy"
         val news = NewsFactory.createNews(title = title, url = url, provider = "Finanzen.net", datePattern = datePattern, dateString = dateString)
         if (!news.relevant) return
         @Suppress("BlockingMethodInNonBlockingContext")
-        news.text = if (url.isNotEmpty()) {
+        if (url.isNotEmpty()) {
             delay(delay)
-            Jsoup.connect(url).get().select("div[id=\"news-container\"]").first()?.wholeText() ?: ""
-        } else ""
+            val document = Jsoup.connect(url).get()
+            news.text = document.select("div[id=\"news-container\"]").first()?.wholeText() ?: ""
+            document.select(".pull-left.mright-20").first()?.let {
+                news.updateDisplayDate(it.wholeOwnText(), "dd.MM.yyyy HH:mm")
+            }
+            news.dateString = document.select(".pull-left.mright-20").first()?.wholeOwnText() ?: news.displayDate
+        }
         newsList.add(news)
     }
 
