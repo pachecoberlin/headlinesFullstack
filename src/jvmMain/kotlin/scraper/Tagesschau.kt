@@ -14,10 +14,9 @@ class Tagesschau : Scraper {
         val provider = "Tagesschau"
     }
 
-    override val htmlClass = "boxCon"
+    override val cssQuery = ".boxCon"
     private val baseUrl = "https://www.tagesschau.de"
     override val url = "$baseUrl/allemeldungen/"
-    override val tagName = ""
 
     private suspend fun parseToHeadline(li: Element, newsList: MutableList<News>) {
         val anchor = li.getElementsByTag("a")
@@ -68,8 +67,7 @@ class Tagesschau : Scraper {
 }
 
 class TagesschauWirtschaft : Scraper {
-    override val htmlClass: String = "teaser__link"
-    override val tagName: String = ""
+    override val cssQuery: String = ".teaser__link"
     override val url: String = "https://www.tagesschau.de/wirtschaft/"
 
     override suspend fun parse(element: Element, newsList: MutableList<News>) {

@@ -10,6 +10,7 @@ fun printErr(errorMsg: Any) {
 
 @Suppress("BlockingMethodInNonBlockingContext")
 suspend fun getStaticContentFromUrl(url: String): Document {
+    if (url.isEmpty()) return Document("url")
     return try {
         Jsoup.connect(url).get()
     } catch (ex: Exception) {

@@ -8,9 +8,8 @@ import org.jsoup.nodes.Element
 import utilities.getStaticContentFromUrl
 
 class Spiegel : Scraper {
-    override val htmlClass: String = ""
+    override val cssQuery = "article"
     override val url = "https://www.spiegel.de/schlagzeilen/"
-    override val tagName = "article"
 
     private suspend fun parseToHeadline(div: Element, newsList: MutableList<News>) {
         delay(delay)
@@ -40,7 +39,6 @@ class Spiegel : Scraper {
             news.text = getStaticContentFromUrl(url).getElementsByTag("article").first()?.wholeText() ?: ""
         newsList.add(news)
     }
-
 
     override suspend fun parse(element: Element, newsList: MutableList<News>) {
         parseToHeadline(element, newsList)

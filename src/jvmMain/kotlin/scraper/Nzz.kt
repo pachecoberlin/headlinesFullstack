@@ -8,8 +8,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
 class Nzz : Scraper {
-    override val htmlClass: String = ""
-    override val tagName = "article"
+    override val cssQuery = "article"
     override val url: String = "https://www.nzz.ch/neueste-artikel"
 
     override suspend fun parse(element: Element, newsList: MutableList<News>) {

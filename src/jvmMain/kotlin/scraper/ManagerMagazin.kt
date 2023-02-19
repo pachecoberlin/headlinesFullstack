@@ -8,8 +8,7 @@ import org.jsoup.nodes.Element
 import utilities.getStaticContentFromUrl
 
 class ManagerMagazin : Scraper {
-    override val htmlClass: String = ""
-    override val tagName = "article"
+    override val cssQuery = "article"
     override val url: String = "https://www.manager-magazin.de/schlagzeilen/"
 
     override suspend fun parse(element: Element, newsList: MutableList<News>) {

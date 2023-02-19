@@ -4,8 +4,7 @@ import entities.News
 import org.jsoup.nodes.Element
 
 class DerStandard : Scraper {
-    override val htmlClass: String = ""
-    override val tagName = "article"
+    override val cssQuery = "article"
     override val url: String = "https://www.derstandard.at/frontpage/latest"
 
     override suspend fun parse(element: Element, newsList: MutableList<News>) {

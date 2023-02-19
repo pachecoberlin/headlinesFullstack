@@ -9,8 +9,7 @@ import org.jsoup.nodes.Element
 import utilities.getStaticContentFromUrl
 
 class WiWo(path: String) : Scraper {
-    override val htmlClass: String = "div[data-macro=\"teaser\"]"
-    override val tagName = ""
+    override val cssQuery: String = "div[data-macro=\"teaser\"]"
     override val url: String = "https://www.wiwo.de/$path"
 
     override suspend fun parse(element: Element, newsList: MutableList<News>) {
@@ -33,13 +32,4 @@ class WiWo(path: String) : Scraper {
         val datetime = document.getElementsByTag("time").attr("datetime") ?: ""
         text to datetime
     } else "" to ""
-
-    //    TODO scraper select htmlclass and makes dot before. but that is bad for other query strings
-    override suspend fun getNews(newsList: MutableList<News>): List<News> {
-        println("Scraping: $url")
-        val document = getStaticContentFromUrl(url)
-        val select = if (htmlClass.isNotEmpty()) document.select(htmlClass) else document.getElementsByTag(tagName)
-        select.forEach { parse(it, newsList) }
-        return newsList
-    }
 }

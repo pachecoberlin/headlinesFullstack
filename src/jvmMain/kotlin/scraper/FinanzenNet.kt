@@ -9,8 +9,7 @@ import org.jsoup.nodes.Element
 import utilities.getStaticContentFromUrl
 
 class FinanzenNet : Scraper {
-    override val htmlClass: String = "table__tbody"
-    override val tagName = ""
+    override val cssQuery: String = ".table__tbody"
     override val url: String = "https://www.finanzen.net/news/"
 
     override suspend fun parse(element: Element, newsList: MutableList<News>) {
@@ -35,7 +34,7 @@ class FinanzenNet : Scraper {
     override suspend fun getNews(newsList: MutableList<News>): List<News> {
         println("Scraping: $url")
         val document = getStaticContentFromUrl(url)
-        val select = document.select(".$htmlClass")
+        val select = document.select(cssQuery)
         try {
             select[1].select(".table__tr").forEach { parse(it, newsList) }
             select[3].select(".table__tr").forEach { parse(it, newsList) }

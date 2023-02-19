@@ -8,8 +8,8 @@ import org.jsoup.nodes.Element
 import utilities.getStaticContentFromUrl
 
 class Tonline : Scraper {
-    override val tagName = ""
-    override val htmlClass = "einr7x61"
+    private val htmlClass = "einr7x61"
+    override val cssQuery = ".$htmlClass"
     private val baseUrl = "https://www.t-online.de"
     override val url = "$baseUrl/schlagzeilen/"
 

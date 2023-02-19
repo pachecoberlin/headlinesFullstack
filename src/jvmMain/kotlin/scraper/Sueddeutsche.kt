@@ -11,8 +11,8 @@ import utilities.getStaticContentFromUrl
 import utilities.printErr
 
 class Sueddeutsche : Scraper {
-    override val htmlClass: String = "entrylist__entry"
-    override val tagName = ""
+    private val htmlClass: String = "entrylist__entry"
+    override val cssQuery: String = ".$htmlClass"
     override val url: String = "https://www.sueddeutsche.de/news/page/"
 
     override suspend fun getNews(newsList: MutableList<News>): List<News> {
@@ -20,7 +20,7 @@ class Sueddeutsche : Scraper {
             val url = this.url + i
             println("Scraping: $url")
             val document = getStaticContentFromUrl(url)
-            val select = if (htmlClass.isNotEmpty()) document.select(".$htmlClass") else document.getElementsByTag(tagName)
+            val select = document.select(cssQuery)
             select.forEach { parse(it, newsList) }
         }
         return newsList

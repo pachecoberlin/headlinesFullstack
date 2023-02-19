@@ -8,8 +8,8 @@ import org.jsoup.nodes.Element
 import utilities.getStaticContentFromUrl
 
 class Faz : Scraper {
-    override val htmlClass = "ticker-news-item"
-    override val tagName = ""
+    private val htmlClass = "ticker-news-item"
+    override val cssQuery = ".$htmlClass"
     override val url = "https://www.faz.net/faz-live"
 
     override suspend fun parse(element: Element, newsList: MutableList<News>) {

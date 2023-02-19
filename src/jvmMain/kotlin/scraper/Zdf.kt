@@ -8,8 +8,8 @@ import org.jsoup.nodes.Element
 import utilities.getStaticContentFromUrl
 
 class Zdf : Scraper {
-    override val htmlClass: String = "container"
-    override val tagName = ""
+    private val htmlClass: String = "container"
+    override val cssQuery: String = ".$htmlClass"
     override val url: String = "https://www.zdf.de/nachrichten/nachrichtenticker-100.html"
 
     override suspend fun getNews(newsList: MutableList<News>): List<News> {
@@ -53,8 +53,7 @@ class Zdf : Scraper {
 }
 
 class ZdfWirtschaft : Scraper {
-    override val htmlClass: String = "b-content-teaser-list"
-    override val tagName: String = ""
+    override val cssQuery: String = ".b-content-teaser-list"
     override val url: String = "https://www.zdf.de/nachrichten/wirtschaft"
 
     override suspend fun parse(element: Element, newsList: MutableList<News>) {
