@@ -29,7 +29,6 @@ class FinanzenNet : Scraper {
             document.select(".pull-left.mright-20").first()?.let {
                 news.updateDisplayDate(it.wholeOwnText(), "dd.MM.yyyy HH:mm")
             }
-            news.dateString = document.select(".pull-left.mright-20").first()?.wholeOwnText() ?: news.displayDate
         }
         newsList.add(news)
     }
