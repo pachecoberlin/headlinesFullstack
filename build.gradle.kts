@@ -7,11 +7,14 @@ val kotlin_css_version = "1.0.0-pre.473"
 val logbackVersion = "1.2.11"
 val kotlinWrappersVersion = "1.0.0-pre.354"
 val kmongoVersion = "4.5.0"
+val gebVersion = "7.0"
+
 
 plugins {
     kotlin("multiplatform") version "1.7.20-Beta"
     application //to run JVM part
     kotlin("plugin.serialization") version "1.7.20-Beta"
+//    groovy
 }
 
 group = "org.example"
@@ -25,11 +28,13 @@ kotlin {
     jvm {
         withJava()
     }
+
     js {
         browser {
             binaries.executable()
         }
     }
+
     sourceSets {
         @Suppress("UNUSED_VARIABLE") val commonMain by getting {
             dependencies {
@@ -47,12 +52,14 @@ kotlin {
 
         @Suppress("UNUSED_VARIABLE") val jvmMain by getting {
             dependencies {
+                implementation("io.ktor:ktor-network-tls-certificates:$ktorVersion")
                 implementation("io.ktor:ktor-serialization:$ktorVersion")
-                implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
                 implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+                implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
                 implementation("io.ktor:ktor-server-cors:$ktorVersion")
                 implementation("io.ktor:ktor-server-compression:$ktorVersion")
                 implementation("io.ktor:ktor-server-core-jvm:$ktorVersion")
+//                implementation("io.ktor:ktor-server-netty:$ktorVersion")
                 implementation("io.ktor:ktor-server-tomcat:$ktorVersion")
                 implementation("ch.qos.logback:logback-classic:$logbackVersion")
 //                implementation("org.litote.kmongo:kmongo-coroutine-serialization:$kmongoVersion")
@@ -62,8 +69,10 @@ kotlin {
 //                implementation("io.ktor:ktor-server-html-builder-jvm:$ktorVersion")
                 implementation("io.ktor:ktor-server-html-builder:$ktorVersion")
                 implementation("org.jetbrains.kotlin-wrappers:kotlin-css:$kotlin_css_version")
-
-
+//                compile "org.gebish:geb-core:7.0"
+//                compile "org.seleniumhq.selenium:selenium-firefox-driver:4.2.2"
+//                compile "org.seleniumhq.selenium:selenium-support:4.2.2"
+//                implementation("io.reactivex.rxjava2:rxkotlin:3.0.1")
             }
         }
 

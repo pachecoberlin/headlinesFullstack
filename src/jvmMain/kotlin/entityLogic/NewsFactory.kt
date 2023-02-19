@@ -1,7 +1,11 @@
 package entityLogic
 
 import entities.News
+import entityLogic.NewsTime.Companion.dateTimePattern
+import utilities.printErr
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
+import java.util.*
 
 class NewsFactory {
     companion object {
@@ -11,16 +15,22 @@ class NewsFactory {
             provider: String = "",
             overline: String = "",
             teaser: String = "",
+            dateString: String = "",
+            datePattern: String = "",
+            author: String = "",
+            source: String = "",
             text: String = "",
             breadcrumbs: List<String> = emptyList(),
-            author: String = "",
-            displayDate: String = "",
-            dateString: String = "",
-            datePattern: String = ""
+            @Suppress("UNUSED_PARAMETER") displayDate: String = "",
         ): News {
-            val dateStringClean = dateString.replace(" ", "").replace("-", "").trim()
-            val datePatternClean = datePattern.replace(" ", "").trim()
-            return News(
+            var dateStringClean = dateString.trim()
+            var datePatternClean = datePattern.trim()
+            listOf("Uhr", "Min.", " ", "-", "vor", "\n", "Stand:")
+                .forEach {
+                    dateStringClean = dateStringClean.replace(it, "")
+                    datePatternClean = datePatternClean.replace(it, "")
+                }
+            val news = News(
                 title = title.trim(),
                 url = url,
                 provider = provider,
@@ -29,25 +39,26 @@ class NewsFactory {
                 text = text,
                 breadcrumbs = breadcrumbs,
                 author = author,
-                displayDate = displayDate,
+                datePattern = datePatternClean,
                 dateString = dateStringClean,
-                datePattern = datePatternClean
+                source = source,
             )
+            news.displayDate = news.date.format(DateTimeFormatter.ofPattern(dateTimePattern, Locale.GERMAN)).toString()
+            news.datePattern = dateTimePattern
+            news.dateString = news.displayDate
+            return news
         }
     }
 }
 
 val News.date: LocalDateTime
-    get() = dateCache
-
-private val News.dateCache: LocalDateTime
-    get() {
-        return try {
-            NewsTime.createLocalDateTime(datePattern, dateString)
-        } catch (e: Exception) {
-            e.printStackTrace()
-            NewsTime.fallBackDateTime
+    get() = try {
+        NewsTime.createLocalDateTime(datePattern, dateString)
+    } catch (e: Exception) {
+        if (dateString.isNotEmpty()) {
+            printErr("For provider: $provider ${e.localizedMessage}")
         }
+        NewsTime.fallBackDateTime
     }
 
 /**
@@ -56,5 +67,14 @@ private val News.dateCache: LocalDateTime
 val News.relevant: Boolean
     get() {
         val now = LocalDateTime.now()
-        return date.isAfter(now.minusHours(24)) && date.isBefore(now)
+        return date.isAfter(now.minusHours(24))
     }
+
+
+fun News.updateDisplayDate(dateString: String, datePattern: String) {
+    this.dateString=dateString
+    this.datePattern=datePattern
+    displayDate = date.format(DateTimeFormatter.ofPattern(dateTimePattern, Locale.GERMAN)).toString()
+    this.datePattern = dateTimePattern
+    this.dateString = displayDate
+}

@@ -1,25 +1,13 @@
 package scraper
 
 import entities.News
-import entityLogic.relevant
-import kotlin.streams.toList
+import org.jsoup.nodes.Element
 
-class Scraper {
-    val relevantNews = mutableListOf<News>()
-    fun getNews(): List<News> {
-        val newsList = mutableListOf<News>()
-        Sueddeutsche.getNews(newsList)
-        Faz.getNews(newsList)
-        Tagesschau.getNews(newsList)
-        Zdf.getNews(newsList)
-        Spiegel.getNews(newsList)
-        Tonline.getNews(newsList)
-        TableMedia.getNews(newsList)
-        relevantNews.addAll(newsList.parallelStream().filter { it.relevant }.toList())
-        return relevantNews
-    }
+interface Scraper {
+    val cssQuery: String
+    val url: String
 
-    fun filterBy(s: String?): List<News> {
-        return if (s == null) relevantNews else relevantNews.filter { it.contains(s) }
-    }
+    suspend fun getNews(newsList: MutableList<News>): List<News>
+
+    suspend fun parse(element: Element, newsList: MutableList<News>)
 }

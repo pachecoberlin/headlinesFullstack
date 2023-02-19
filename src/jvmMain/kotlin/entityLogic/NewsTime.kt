@@ -4,13 +4,13 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeParseException
 import java.time.temporal.ChronoField
 import java.time.temporal.TemporalAccessor
 import java.util.*
 
 class NewsTime {
     companion object {
+        const val dateTimePattern = "dd.MM.yyyy HH:mm"
         val fallBackDateTime: LocalDateTime = LocalDateTime.now().minusMinutes(5)
         internal fun createLocalDateTime(datePattern: String, dateString: String): LocalDateTime {
             //TODO think about the fallbacktime, it's good enough for sueddeutsche
@@ -20,14 +20,7 @@ class NewsTime {
                 e.printStackTrace()
                 return fallBackDateTime
             }
-            val temporalAccessor = try {
-                pattern.parse(dateString)
-            } catch (ex: DateTimeParseException) {
-                if (!dateString.isEmpty()) {
-                    ex.printStackTrace()
-                }
-                return fallBackDateTime
-            }
+            val temporalAccessor = pattern.parse(if (dateString == "60") "59" else dateString)
             return LocalDateTime.of(createLocalDate(temporalAccessor), createLocalTime(temporalAccessor))
         }
 

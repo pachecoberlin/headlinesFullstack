@@ -10,7 +10,17 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.tomcat.*
-import scraper.Scraper
+import keystoreFilename
+import keystorePassword
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import org.slf4j.LoggerFactory
+import scraper.ScrapeMaster
+import java.io.File
+import java.io.FileInputStream
+import java.security.KeyStore
+
 
 val collection = mutableListOf(
     ShoppingListItem("Cucumbers 🥒", 1),
@@ -19,18 +29,49 @@ val collection = mutableListOf(
 )
 
 fun main() {
-    val port = System.getenv("PORT")?.toInt() ?: 9090
-    val scraper = Scraper()
-    scraper.getNews()
-    embeddedServer(Tomcat, port) {
-        serverSettings()
-        routings(scraper)
-    }.start(wait = true)
+    runBlocking {
+        launch(Dispatchers.IO) {
+            ScrapeMaster.getNews()
+        }
+        embeddedServer(Tomcat, environment()).start(wait = true)
+    }
 }
 
-private fun Application.routings(scraper: Scraper) {
+private fun environment(): ApplicationEngineEnvironment {
+    return applicationEngineEnvironment {
+        log = LoggerFactory.getLogger("ktor.application")
+//        connector { port = 9090 } //for unsecured HTTP access
+        setSslConnector()
+        module(Application::serverSettings)
+        module(Application::routings)
+    }
+}
+
+private fun ApplicationEngineEnvironmentBuilder.setSslConnector() {
+    println("Setting SSL Connection")
+    val (keyStoreFile, ks, pwdArray) = getKeystore()
+    sslConnector(
+        keyStore = ks,
+        keyAlias = "www.pacheco.de",
+        keyStorePassword = { pwdArray },
+        privateKeyPassword = { pwdArray }
+    ) {
+        port = 9443
+        keyStorePath = keyStoreFile
+    }
+}
+
+private fun getKeystore(): Triple<File, KeyStore, CharArray> {
+    val keyStoreFile = File(keystoreFilename)
+    val ks = KeyStore.getInstance(KeyStore.getDefaultType())
+    val pwdArray = keystorePassword.toCharArray()
+    ks.load(FileInputStream(keyStoreFile), pwdArray)
+    return Triple(keyStoreFile, ks, pwdArray)
+}
+
+private fun Application.routings() {
     routing {
-        get("/") {
+        get("/SoerensFastNewsScraper") {
             call.respondText(
                 this::class.java.classLoader.getResource("index.html")!!.readText(),
                 ContentType.Text.Html
@@ -45,7 +86,7 @@ private fun Application.routings(scraper: Scraper) {
                 call.respond(collection.toList())
             }
             post {
-                collection.add(call.receive<ShoppingListItem>())
+                collection.add(call.receive())
                 call.respond(HttpStatusCode.OK)
             }
             delete("/{id}") {
@@ -55,14 +96,9 @@ private fun Application.routings(scraper: Scraper) {
             }
         }
         route(News.path) {
-            get { call.respond(scraper.relevantNews) }
-            post {
-                val filterString = call.receive<String>()
-                scraper.relevantNews.add(News(filterString, filterString, filterString))
-                call.respond(HttpStatusCode.OK)
-            }
+            get { call.respond(ScrapeMaster.sortedNews) }
             get("/{filterstring}") {
-                call.respond(scraper.filterBy(call.parameters["filterstring"]))
+                call.respond(ScrapeMaster.filterBy(call.parameters["filterstring"]))
             }
         }
     }
