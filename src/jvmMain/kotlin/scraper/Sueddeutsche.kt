@@ -19,7 +19,6 @@ class Sueddeutsche : Scraper {
     override suspend fun getNews(newsList: MutableList<News>): List<News> {
         for (i in 1..10) {
             val url = this.url + i
-
             println("Scraping: $url")
             val document = Jsoup.connect(url).get()
             val select = if (htmlClass.isNotEmpty()) document.select(".$htmlClass") else document.getElementsByTag(tagName)
@@ -60,13 +59,15 @@ class Sueddeutsche : Scraper {
 //                datePattern = "yyyy-MM-dd HH:mm:ss",
             datePattern = "[dd.MM.yyyy | ][HH:]m"
         )
-        if (!news.relevant){
+        if (!news.relevant) {
             printErr("${news.date} $title")
             return
         }
-        val (text, date2) = getArticleText(url)
-        news.text = text
-        news.updateDisplayDate(date2,"yyyy-MM-dd HH:mm:ss")
+        if (getArticleDetails) {
+            val (text, date2) = getArticleText(url)
+            news.text = text
+            news.updateDisplayDate(date2, "yyyy-MM-dd HH:mm:ss")
+        }
         newsList.add(news)
     }
 

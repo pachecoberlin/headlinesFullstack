@@ -16,6 +16,8 @@ interface Scraper {
     val url: String
     val delay: Long
         get() = (510 + Random.nextInt(3, 300)).toLong()
+    val getArticleDetails: Boolean
+        get() = false
 
     @Suppress("BlockingMethodInNonBlockingContext")
     suspend fun getNews(newsList: MutableList<News>): List<News> {
