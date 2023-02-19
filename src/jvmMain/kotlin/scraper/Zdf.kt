@@ -4,8 +4,8 @@ import entities.News
 import entityLogic.NewsFactory
 import entityLogic.relevant
 import kotlinx.coroutines.delay
-import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import utilities.getStaticContentFromUrl
 
 class Zdf : Scraper {
     companion object {
@@ -54,6 +54,7 @@ class Zdf : Scraper {
 
     override suspend fun parse(element: Element, newsList: MutableList<News>) {
         parseToHeadline(element, newsList)
+        delay(delay * 10)
     }
 }
 
@@ -62,17 +63,16 @@ class ZdfWirtschaft : Scraper {
     override val tagName: String = ""
     override val url: String = "https://www.zdf.de/nachrichten/wirtschaft"
 
-    @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun parse(element: Element, newsList: MutableList<News>) {
         if (element.select(".section-header-title").first()?.wholeOwnText()?.contains("Aktuelle Wirtschaftsnachrichten") == true)
             element.getElementsByTag("article").forEach { article ->
-            delay(delay)
+                delay(delay)
                 val anchor = article.getElementsByTag("a")
                 val url = anchor.attr("abs:href") ?: ""
                 val overline = article.select(".teaser-cat").first()?.wholeText() ?: ""
                 val author = article.select(".author-icon-text").first()?.wholeText() ?: ""
                 val title = anchor.attr("title") ?: ""
-                val document = Jsoup.connect(url).get()
+                val document = getStaticContentFromUrl(url)
                 val datestring = document.select(".postdate").first()?.getElementsByTag("time")?.attr("datetime") ?: ""
 //            2023-02-02T18:14:00.000+01:00
                 val datePattern = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX"

@@ -1,8 +1,8 @@
 package scraper
 
 import entities.News
-import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import utilities.getStaticContentFromUrl
 import kotlin.random.Random
 
 /**
@@ -19,10 +19,9 @@ interface Scraper {
     val getArticleDetails: Boolean
         get() = false
 
-    @Suppress("BlockingMethodInNonBlockingContext")
     suspend fun getNews(newsList: MutableList<News>): List<News> {
         println("Scraping: $url")
-        val document = Jsoup.connect(url).get()
+        val document = getStaticContentFromUrl(url)
         val select = if (htmlClass.isNotEmpty()) document.select(".$htmlClass") else document.getElementsByTag(tagName)
         select.forEach { parse(it, newsList) }
         return newsList

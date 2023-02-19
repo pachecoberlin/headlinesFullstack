@@ -4,8 +4,8 @@ import entities.News
 import entityLogic.NewsFactory
 import entityLogic.relevant
 import kotlinx.coroutines.delay
-import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import utilities.getStaticContentFromUrl
 
 class ManagerMagazin : Scraper {
     override val htmlClass: String = ""
@@ -27,11 +27,10 @@ class ManagerMagazin : Scraper {
             datePattern = datePattern,
             dateString =
 //            dateString+
-                    timeString
+            timeString
         )
         if (!news.relevant) return
-        @Suppress("BlockingMethodInNonBlockingContext")
-        news.text = Jsoup.connect(url).get().getElementsByTag("article").first()?.wholeText() ?: ""
+        news.text = getStaticContentFromUrl(url).getElementsByTag("article").first()?.wholeText() ?: ""
         newsList.add(news)
     }
 }

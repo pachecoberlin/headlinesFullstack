@@ -4,10 +4,10 @@ import entities.News
 import entityLogic.NewsFactory
 import entityLogic.relevant
 import kotlinx.coroutines.delay
-import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 import scraper.Tagesschau.Companion.provider
+import utilities.getStaticContentFromUrl
 
 class Tagesschau : Scraper {
     companion object {
@@ -20,7 +20,6 @@ class Tagesschau : Scraper {
     override val tagName = ""
 
     private suspend fun parseToHeadline(li: Element, newsList: MutableList<News>) {
-        delay(delay)
         val anchor = li.getElementsByTag("a")
         val url = getURL(anchor)
         val title = anchor.text()
@@ -35,6 +34,7 @@ class Tagesschau : Scraper {
             datePattern = "HH:mmeeee, dd. MMMM yyyy"
         )
         if (!news.relevant) return
+        delay(delay)
         val (text, author) = getArticleText(url)
         news.text = text
         news.author = author
@@ -44,8 +44,8 @@ class Tagesschau : Scraper {
     private fun getURL(anchor: Elements) = //baseUrl +
         anchor.attr("abs:href")
 
-    private fun getArticleText(url: String): Pair<String, String> {
-        val document = Jsoup.connect(url).get()
+    private suspend fun getArticleText(url: String): Pair<String, String> {
+        val document = getStaticContentFromUrl(url)
         //special case of swr.de sould be moved if swr.de scraper is implemented
         if (url.contains("www.swr.de")) return (document.getElementsByTag("article").first()?.wholeText() ?: "") to ""
         val paragraphs = document.select(".textabsatz").map { it.wholeText() }
@@ -70,14 +70,13 @@ class TagesschauWirtschaft : Scraper {
     override val tagName: String = ""
     override val url: String = "https://www.tagesschau.de/wirtschaft/"
 
-    @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun parse(element: Element, newsList: MutableList<News>) {
-        delay(1300)
+        delay(delay)
         val url = element.attr("abs:href") ?: ""
         val overline = element.select(".teaser__topline").first()?.wholeOwnText() ?: ""
         val title = element.select(".teaser__headline").first()?.wholeOwnText() ?: ""
         val teaser = element.select(".teaser__shorttext").first()?.wholeText() ?: ""
-        val document = Jsoup.connect(url).get()
+        val document = getStaticContentFromUrl(url)
         val datestring = document.select(".metatextline").first()?.wholeOwnText() ?: ""
         val datePattern = "dd.MM.yyyy HH:mm"
         val text = document.getElementsByTag("main").first()?.wholeText() ?: ""

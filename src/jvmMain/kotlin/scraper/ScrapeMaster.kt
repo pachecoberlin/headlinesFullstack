@@ -6,12 +6,15 @@ import entityLogic.relevant
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import utilities.printErr
 import java.util.concurrent.Executors
 
 class ScrapeMaster {
     companion object {
         private val newsUpdater = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
-        val relevantNews = mutableSetOf<News>()
+        private val relevantNews = mutableSetOf<News>()
+        val sortedNews: List<News>
+            get() = relevantNews.sortedByDescending { it.date }
         private val scrapers = listOf(
             Sueddeutsche(),
             Faz(),
@@ -39,17 +42,21 @@ class ScrapeMaster {
             coroutineScope {
                 scraperDispatchers.forEach { (scraper, dispatcher) ->
                     launch(dispatcher) {
-                        val newsList = mutableListOf<News>()
-                        try {
-                            scraper.getNews(newsList)
-                        } catch (ex: Exception) {
-                            ex.printStackTrace()
-                        } finally {
-                            updateNews(newsList)
+                        while (true) {
+                            val newsList = mutableListOf<News>()
+                            try {
+                                scraper.getNews(newsList)
+                            } catch (ex: Exception) {
+                                ex.printStackTrace()
+                            } finally {
+                                updateNews(newsList)
+                            }
                         }
                     }
                 }
             }
+            // if we ever get here we want to start over
+            printErr("Somehow we got here ¯\\_(ツ)_/¯")
             latestNews()
         }
 
@@ -65,7 +72,7 @@ class ScrapeMaster {
         }
 
         fun filterBy(s: String?): Collection<News> {
-            return if (s == null) relevantNews.sortedBy { it.date } else relevantNews.filter { it.contains(s) }.sortedBy { it.date }
+            return if (s == null) sortedNews else sortedNews.filter { it.contains(s) }
         }
     }
 }

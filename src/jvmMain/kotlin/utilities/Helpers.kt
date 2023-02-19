@@ -1,5 +1,24 @@
 package utilities
 
-fun printErr(errorMsg:Any){
+import kotlinx.coroutines.delay
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
+
+fun printErr(errorMsg: Any) {
     System.err.println(errorMsg)
+}
+
+@Suppress("BlockingMethodInNonBlockingContext")
+suspend fun getStaticContentFromUrl(url: String): Document {
+    return try {
+        Jsoup.connect(url).get()
+    } catch (ex: Exception) {
+        delay(5000)
+        try {
+            Jsoup.connect(url).get()
+        } catch (ex: Exception) {
+            ex.printStackTrace()
+            Document(url)
+        }
+    }
 }

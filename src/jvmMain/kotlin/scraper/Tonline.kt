@@ -4,8 +4,8 @@ import entities.News
 import entityLogic.NewsFactory
 import entityLogic.relevant
 import kotlinx.coroutines.delay
-import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import utilities.getStaticContentFromUrl
 
 class Tonline : Scraper {
     override val tagName = ""
@@ -14,7 +14,6 @@ class Tonline : Scraper {
     override val url = "$baseUrl/schlagzeilen/"
 
     private suspend fun parseToHeadline(div: Element, newsList: MutableList<News>) {
-        delay(delay)
         val newsContainer = div.getElementsByClass(htmlClass)
         if (newsContainer.size > 1) {
             newsContainer.forEach { parseToHeadline(it, newsList) }
@@ -40,14 +39,15 @@ class Tonline : Scraper {
             datePattern = "eeee, dd.MM",
         )
         if (!news.relevant) return
+        delay(delay)
         val (text, authors) = getArticleText(url)
         news.text = text
         news.author = authors
         newsList.add(news)
     }
 
-    private fun getArticleText(url: String): Pair<String, String> {
-        val document = Jsoup.connect(url).get()
+    private suspend fun getArticleText(url: String): Pair<String, String> {
+        val document = getStaticContentFromUrl(url)
         val authors = document.select("div[aria-label=\"Autoren\"]").first()?.wholeText() ?: ""
         val paragraphs = document.select(".e1i3z84t3").map { it.wholeText() }
         var text = if (paragraphs.isNotEmpty()) paragraphs.reduce { a, b -> "$a\n$b" } else ""

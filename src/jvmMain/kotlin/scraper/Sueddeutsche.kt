@@ -6,8 +6,8 @@ import entityLogic.date
 import entityLogic.relevant
 import entityLogic.updateDisplayDate
 import kotlinx.coroutines.delay
-import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import utilities.getStaticContentFromUrl
 import utilities.printErr
 
 class Sueddeutsche : Scraper {
@@ -15,23 +15,21 @@ class Sueddeutsche : Scraper {
     override val tagName = ""
     override val url: String = "https://www.sueddeutsche.de/news/page/"
 
-    @Suppress("BlockingMethodInNonBlockingContext")
     override suspend fun getNews(newsList: MutableList<News>): List<News> {
         for (i in 1..10) {
             val url = this.url + i
             println("Scraping: $url")
-            val document = Jsoup.connect(url).get()
+            val document = getStaticContentFromUrl(url)
             val select = if (htmlClass.isNotEmpty()) document.select(".$htmlClass") else document.getElementsByTag(tagName)
             select.forEach { parse(it, newsList) }
         }
         return newsList
     }
 
-    private suspend fun parseToHeadline(div: Element, newsList: MutableList<News>) {
-        delay(delay)
-        val newsContainer = div.getElementsByClass(htmlClass)
+    override suspend fun parse(element: Element, newsList: MutableList<News>) {
+        val newsContainer = element.getElementsByClass(htmlClass)
         if (newsContainer.size > 1) {
-            newsContainer.forEach { parseToHeadline(it, newsList) }
+            newsContainer.forEach { parse(it, newsList) }
             println("Unexpected number of tags: ${newsContainer.size}")
             return
         } else if (newsContainer.isEmpty()) {
@@ -64,6 +62,7 @@ class Sueddeutsche : Scraper {
             return
         }
         if (getArticleDetails) {
+            delay(delay)
             val (text, date2) = getArticleText(url)
             news.text = text
             news.updateDisplayDate(date2, "yyyy-MM-dd HH:mm:ss")
@@ -71,13 +70,9 @@ class Sueddeutsche : Scraper {
         newsList.add(news)
     }
 
-    private fun getArticleText(url: String): Pair<String, String> {
-        val document = Jsoup.connect(url).get()
+    private suspend fun getArticleText(url: String): Pair<String, String> {
+        val document = getStaticContentFromUrl(url)
         return (document.select("div[itemprop=\"articleBody\"]")
             .first()?.wholeText() ?: "") to document.select("time").attr("datetime")
-    }
-
-    override suspend fun parse(element: Element, newsList: MutableList<News>) {
-        parseToHeadline(element, newsList)
     }
 }

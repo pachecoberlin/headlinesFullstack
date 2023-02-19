@@ -4,15 +4,14 @@ import entities.News
 import entityLogic.NewsFactory
 import entityLogic.relevant
 import kotlinx.coroutines.delay
-import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import utilities.getStaticContentFromUrl
 
 class Spiegel : Scraper {
     override val htmlClass: String = ""
     override val url = "https://www.spiegel.de/schlagzeilen/"
     override val tagName = "article"
 
-    @Suppress("BlockingMethodInNonBlockingContext")
     private suspend fun parseToHeadline(div: Element, newsList: MutableList<News>) {
         delay(delay)
         val anchor = div.getElementsByTag("a")
@@ -37,7 +36,7 @@ class Spiegel : Scraper {
             datePattern = "[d. MMMM, ]HH.mm",
         )
         if (!news.relevant) return
-        news.text = Jsoup.connect(url).get().getElementsByTag("article").first()?.wholeText() ?: ""
+        news.text = getStaticContentFromUrl(url).getElementsByTag("article").first()?.wholeText() ?: ""
         newsList.add(news)
     }
 

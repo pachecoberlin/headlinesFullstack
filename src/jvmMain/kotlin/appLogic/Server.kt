@@ -86,7 +86,7 @@ private fun Application.routings() {
                 call.respond(collection.toList())
             }
             post {
-                collection.add(call.receive<ShoppingListItem>())
+                collection.add(call.receive())
                 call.respond(HttpStatusCode.OK)
             }
             delete("/{id}") {
@@ -96,7 +96,7 @@ private fun Application.routings() {
             }
         }
         route(News.path) {
-            get { call.respond(ScrapeMaster.relevantNews) }
+            get { call.respond(ScrapeMaster.sortedNews) }
             get("/{filterstring}") {
                 call.respond(ScrapeMaster.filterBy(call.parameters["filterstring"]))
             }

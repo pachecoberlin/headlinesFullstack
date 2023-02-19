@@ -4,13 +4,12 @@ import entities.News
 import entityLogic.NewsFactory
 import entityLogic.relevant
 import kotlinx.coroutines.delay
-import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import utilities.getStaticContentFromUrl
 
 class Faz : Scraper {
 
     private suspend fun parseToHeadline(div: Element, newsList: MutableList<News>) {
-        delay(delay)
         val newsContainer = div.getElementsByClass(htmlClass)
         if (newsContainer.size > 1) {
             newsContainer.forEach { parseToHeadline(it, newsList) }
@@ -20,7 +19,6 @@ class Faz : Scraper {
             System.err.println("No tag with class:$htmlClass in here")
             return
         }
-
         val newsEntry = newsContainer.first()
         val titleAndLink = newsEntry?.getElementsByClass("ticker-news-title")?.first()?.getElementsByTag("a")?.first()
         val url = titleAndLink?.attr("href") ?: ""
@@ -40,14 +38,15 @@ class Faz : Scraper {
             datePattern = "dd.MM.yyyy HH:mm",
         )
         if (!news.relevant) return
+        delay(delay)
         val (text, source) = getArticleText(url)
         news.text = text
         news.source = source
         newsList.add(news)
     }
 
-    private fun getArticleText(url: String): Pair<String, String> {
-        val document = Jsoup.connect(url).get()
+    private suspend fun getArticleText(url: String): Pair<String, String> {
+        val document = getStaticContentFromUrl(url)
         val text = document.select(".atc-Text").first()?.wholeText() ?: ""
         val source = document.select(".atc-Footer_Quelle").first()?.wholeOwnText()?.removePrefix("Quelle:") ?: ""
         return text to source
