@@ -13,7 +13,7 @@ interface Scraper {
     val tagName: String
     val url: String
     val delay: Long
-        get() = (450 + Random.nextInt(3, 300)).toLong()
+        get() = (510 + Random.nextInt(3, 300)).toLong()
 
     @Suppress("BlockingMethodInNonBlockingContext")
     suspend fun getNews(newsList: MutableList<News>): List<News> {
