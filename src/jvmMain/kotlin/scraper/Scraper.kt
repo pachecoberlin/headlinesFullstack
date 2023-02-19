@@ -6,7 +6,9 @@ import org.jsoup.nodes.Element
 import kotlin.random.Random
 
 /**
- * Only htmlClass or tagName should be used. Anyway htmlClass is used before tagName.
+ * TODO Only htmlClass or tagName should be used. Anyway htmlClass is used before tagName. we only need a cssQuery which is enough to select classes and or tags. Point needs to be removed before use of htmlClass.
+ * TODO Interface should be an interface we need additonally an abstract class
+ *
  */
 interface Scraper {
     val htmlClass: String
