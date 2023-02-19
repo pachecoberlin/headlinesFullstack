@@ -1,6 +1,6 @@
 import org.jetbrains.kotlin.gradle.targets.js.webpack.KotlinWebpack
 
-val kotlinVersion = "1.7.20-Beta"
+val kotlinVersion = "1.8.10"
 val serializationVersion = "1.3.3"
 val ktorVersion = "2.2.1"
 val kotlin_css_version = "1.0.0-pre.473"
@@ -11,14 +11,14 @@ val gebVersion = "7.0"
 
 
 plugins {
-    kotlin("multiplatform") version "1.7.20-Beta"
+    kotlin("multiplatform") version "1.8.10"
     application //to run JVM part
-    kotlin("plugin.serialization") version "1.7.20-Beta"
+    kotlin("plugin.serialization") version "1.8.10"
 //    groovy
 }
 
-group = "org.example"
-version = "1.0-SNAPSHOT"
+group = "de.pacheco.soeren"
+version = "1.0.0"
 
 repositories {
     mavenCentral()
@@ -29,7 +29,7 @@ kotlin {
         withJava()
     }
 
-    js {
+    js(IR) {
         browser {
             binaries.executable()
         }
@@ -111,7 +111,7 @@ tasks.getByName<Jar>("jvmJar") {
 tasks {
     withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions {
-            jvmTarget = "1.8"
+            jvmTarget = "11"
         }
     }
 }

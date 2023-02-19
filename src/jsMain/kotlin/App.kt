@@ -18,7 +18,7 @@ import react.useState
 
 private val scope = MainScope()
 
-val App = FC<Props> { props ->
+val App = FC<Props> { _ ->
     var news by useState(emptyList<News>())
 
     useEffectOnce {
