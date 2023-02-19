@@ -4,6 +4,7 @@ import entities.News
 import entityLogic.NewsFactory
 import entityLogic.date
 import entityLogic.relevant
+import entityLogic.updateDisplayDate
 import kotlinx.coroutines.delay
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -60,14 +61,12 @@ class Sueddeutsche : Scraper {
             datePattern = "[dd.MM.yyyy | ][HH:]m"
         )
         if (!news.relevant){
-            printErr("${news.date} title")
+            printErr("${news.date} $title")
             return
         }
         val (text, date2) = getArticleText(url)
         news.text = text
-        news.displayDate = date2
-        news.dateString = date2
-        news.datePattern = "yyyy-MM-dd HH:mm:ss"
+        news.updateDisplayDate(date2,"yyyy-MM-dd HH:mm:ss")
         newsList.add(news)
     }
 
