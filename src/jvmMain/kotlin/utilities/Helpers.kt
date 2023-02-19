@@ -1,5 +1,5 @@
 package utilities
 
-fun printErr(errorMsg:String){
+fun printErr(errorMsg:Any){
     System.err.println(errorMsg)
 }

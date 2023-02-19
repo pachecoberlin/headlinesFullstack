@@ -3,13 +3,15 @@ package scraper
 import entities.News
 import entityLogic.date
 import entityLogic.relevant
-import kotlinx.coroutines.*
+import kotlinx.coroutines.asCoroutineDispatcher
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import java.util.concurrent.Executors
 
 class ScrapeMaster {
     companion object {
         private val newsUpdater = Executors.newSingleThreadExecutor().asCoroutineDispatcher()
-        val relevantNews = mutableSetOf<News>().toSortedSet { news1, news2 -> news2.date.compareTo(news1.date) }
+        val relevantNews = mutableSetOf<News>()
         private val scrapers = listOf(
             Sueddeutsche(),
             Faz(),
@@ -63,7 +65,7 @@ class ScrapeMaster {
         }
 
         fun filterBy(s: String?): Collection<News> {
-            return if (s == null) relevantNews else relevantNews.filter { it.contains(s) }
+            return if (s == null) relevantNews.sortedBy { it.date } else relevantNews.filter { it.contains(s) }.sortedBy { it.date }
         }
     }
 }
