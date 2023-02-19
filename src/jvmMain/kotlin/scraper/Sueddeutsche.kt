@@ -2,12 +2,31 @@ package scraper
 
 import entities.News
 import entityLogic.NewsFactory
+import entityLogic.date
 import entityLogic.relevant
 import kotlinx.coroutines.delay
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import utilities.printErr
 
 class Sueddeutsche : Scraper {
+    override val htmlClass: String = "entrylist__entry"
+    override val tagName = ""
+    override val url: String = "https://www.sueddeutsche.de/news/page/"
+
+    @Suppress("BlockingMethodInNonBlockingContext")
+    override suspend fun getNews(newsList: MutableList<News>): List<News> {
+        for (i in 1..10) {
+            val url = this.url + i
+
+            println("Scraping: $url")
+            val document = Jsoup.connect(url).get()
+            val select = if (htmlClass.isNotEmpty()) document.select(".$htmlClass") else document.getElementsByTag(tagName)
+            select.forEach { parse(it, newsList) }
+        }
+        return newsList
+    }
+
     private suspend fun parseToHeadline(div: Element, newsList: MutableList<News>) {
         delay(delay)
         val newsContainer = div.getElementsByClass(htmlClass)
@@ -40,7 +59,10 @@ class Sueddeutsche : Scraper {
 //                datePattern = "yyyy-MM-dd HH:mm:ss",
             datePattern = "[dd.MM.yyyy | ][HH:]m"
         )
-        if (!news.relevant) return
+        if (!news.relevant){
+            printErr("${news.date} title")
+            return
+        }
         val (text, date2) = getArticleText(url)
         news.text = text
         news.displayDate = date2
@@ -54,10 +76,6 @@ class Sueddeutsche : Scraper {
         return (document.select("div[itemprop=\"articleBody\"]")
             .first()?.wholeText() ?: "") to document.select("time").attr("datetime")
     }
-
-    override val htmlClass: String = "entrylist__entry"
-    override val tagName = ""
-    override val url: String = "https://www.sueddeutsche.de/news"
 
     override suspend fun parse(element: Element, newsList: MutableList<News>) {
         parseToHeadline(element, newsList)
