@@ -7,7 +7,7 @@ import kotlinx.coroutines.delay
 import org.jsoup.nodes.Element
 import utilities.getStaticContentFromUrl
 
-class Spiegel : Scraper {
+class Spiegel : AbstractScraper() {
     override val cssQuery = "article"
     override val url = "https://www.spiegel.de/schlagzeilen/"
 

@@ -7,7 +7,7 @@ import kotlinx.coroutines.delay
 import org.jsoup.nodes.Element
 import utilities.getStaticContentFromUrl
 
-class Faz : Scraper {
+class Faz : AbstractScraper() {
     private val htmlClass = "ticker-news-item"
     override val cssQuery = ".$htmlClass"
     override val url = "https://www.faz.net/faz-live"

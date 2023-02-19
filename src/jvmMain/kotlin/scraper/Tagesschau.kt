@@ -9,7 +9,7 @@ import org.jsoup.select.Elements
 import scraper.Tagesschau.Companion.provider
 import utilities.getStaticContentFromUrl
 
-class Tagesschau : Scraper {
+class Tagesschau : AbstractScraper() {
     companion object {
         val provider = "Tagesschau"
     }
@@ -66,7 +66,7 @@ class Tagesschau : Scraper {
     }
 }
 
-class TagesschauWirtschaft : Scraper {
+class TagesschauWirtschaft : AbstractScraper() {
     override val cssQuery: String = ".teaser__link"
     override val url: String = "https://www.tagesschau.de/wirtschaft/"
 

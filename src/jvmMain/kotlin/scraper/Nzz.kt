@@ -7,7 +7,7 @@ import kotlinx.coroutines.delay
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
-class Nzz : Scraper {
+class Nzz : AbstractScraper() {
     override val cssQuery = "article"
     override val url: String = "https://www.nzz.ch/neueste-artikel"
 

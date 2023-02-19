@@ -8,7 +8,7 @@ import kotlinx.coroutines.delay
 import org.jsoup.nodes.Element
 import utilities.getStaticContentFromUrl
 
-class FinanzenNet : Scraper {
+class FinanzenNet : AbstractScraper() {
     override val cssQuery: String = ".table__tbody"
     override val url: String = "https://www.finanzen.net/news/"
 

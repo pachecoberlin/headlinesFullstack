@@ -7,7 +7,7 @@ import kotlinx.coroutines.delay
 import org.jsoup.nodes.Element
 import utilities.getStaticContentFromUrl
 
-class Zdf : Scraper {
+class Zdf : AbstractScraper() {
     private val htmlClass: String = "container"
     override val cssQuery: String = ".$htmlClass"
     override val url: String = "https://www.zdf.de/nachrichten/nachrichtenticker-100.html"
@@ -52,7 +52,7 @@ class Zdf : Scraper {
     }
 }
 
-class ZdfWirtschaft : Scraper {
+class ZdfWirtschaft : AbstractScraper() {
     override val cssQuery: String = ".b-content-teaser-list"
     override val url: String = "https://www.zdf.de/nachrichten/wirtschaft"
 

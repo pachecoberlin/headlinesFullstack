@@ -3,7 +3,7 @@ package scraper
 import entities.News
 import org.jsoup.nodes.Element
 
-class DerStandard : Scraper {
+class DerStandard : AbstractScraper() {
     override val cssQuery = "article"
     override val url: String = "https://www.derstandard.at/frontpage/latest"
 

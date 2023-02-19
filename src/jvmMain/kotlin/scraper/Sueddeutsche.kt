@@ -10,7 +10,7 @@ import org.jsoup.nodes.Element
 import utilities.getStaticContentFromUrl
 import utilities.printErr
 
-class Sueddeutsche : Scraper {
+class Sueddeutsche : AbstractScraper() {
     private val htmlClass: String = "entrylist__entry"
     override val cssQuery: String = ".$htmlClass"
     override val url: String = "https://www.sueddeutsche.de/news/page/"

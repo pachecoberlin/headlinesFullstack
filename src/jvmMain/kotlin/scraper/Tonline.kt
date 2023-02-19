@@ -7,7 +7,7 @@ import kotlinx.coroutines.delay
 import org.jsoup.nodes.Element
 import utilities.getStaticContentFromUrl
 
-class Tonline : Scraper {
+class Tonline : AbstractScraper() {
     private val htmlClass = "einr7x61"
     override val cssQuery = ".$htmlClass"
     private val baseUrl = "https://www.t-online.de"

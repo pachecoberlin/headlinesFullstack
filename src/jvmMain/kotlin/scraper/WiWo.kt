@@ -8,7 +8,7 @@ import kotlinx.coroutines.delay
 import org.jsoup.nodes.Element
 import utilities.getStaticContentFromUrl
 
-class WiWo(path: String) : Scraper {
+class WiWo(path: String) : AbstractScraper() {
     override val cssQuery: String = "div[data-macro=\"teaser\"]"
     override val url: String = "https://www.wiwo.de/$path"
 

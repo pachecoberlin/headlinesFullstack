@@ -7,7 +7,7 @@ import kotlinx.coroutines.delay
 import org.jsoup.nodes.Element
 import utilities.getStaticContentFromUrl
 
-class ManagerMagazin : Scraper {
+class ManagerMagazin : AbstractScraper() {
     override val cssQuery = "article"
     override val url: String = "https://www.manager-magazin.de/schlagzeilen/"
 
