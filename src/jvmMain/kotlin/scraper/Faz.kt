@@ -8,11 +8,14 @@ import org.jsoup.nodes.Element
 import utilities.getStaticContentFromUrl
 
 class Faz : Scraper {
+    override val htmlClass = "ticker-news-item"
+    override val tagName = ""
+    override val url = "https://www.faz.net/faz-live"
 
-    private suspend fun parseToHeadline(div: Element, newsList: MutableList<News>) {
-        val newsContainer = div.getElementsByClass(htmlClass)
+    override suspend fun parse(element: Element, newsList: MutableList<News>) {
+        val newsContainer = element.getElementsByClass(htmlClass)
         if (newsContainer.size > 1) {
-            newsContainer.forEach { parseToHeadline(it, newsList) }
+            newsContainer.forEach { parse(it, newsList) }
             println("Unexpected number of tags: ${newsContainer.size}")
             return
         } else if (newsContainer.isEmpty()) {
@@ -38,10 +41,12 @@ class Faz : Scraper {
             datePattern = "dd.MM.yyyy HH:mm",
         )
         if (!news.relevant) return
-        delay(delay)
-        val (text, source) = getArticleText(url)
-        news.text = text
-        news.source = source
+        if (getArticleDetails) {
+            delay(delay)
+            val (text, source) = getArticleText(url)
+            news.text = text
+            news.source = source
+        }
         newsList.add(news)
     }
 
@@ -50,13 +55,5 @@ class Faz : Scraper {
         val text = document.select(".atc-Text").first()?.wholeText() ?: ""
         val source = document.select(".atc-Footer_Quelle").first()?.wholeOwnText()?.removePrefix("Quelle:") ?: ""
         return text to source
-    }
-
-
-    override val htmlClass = "ticker-news-item"
-    override val tagName = ""
-    override val url = "https://www.faz.net/faz-live"
-    override suspend fun parse(element: Element, newsList: MutableList<News>) {
-        parseToHeadline(element, newsList)
     }
 }

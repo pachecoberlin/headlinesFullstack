@@ -13,10 +13,10 @@ class Tonline : Scraper {
     private val baseUrl = "https://www.t-online.de"
     override val url = "$baseUrl/schlagzeilen/"
 
-    private suspend fun parseToHeadline(div: Element, newsList: MutableList<News>) {
-        val newsContainer = div.getElementsByClass(htmlClass)
+    override suspend fun parse(element: Element, newsList: MutableList<News>) {
+        val newsContainer = element.getElementsByClass(htmlClass)
         if (newsContainer.size > 1) {
-            newsContainer.forEach { parseToHeadline(it, newsList) }
+            newsContainer.forEach { parse(it, newsList) }
             println("Unexpected number of tags: ${newsContainer.size}")
             return
         } else if (newsContainer.isEmpty()) {
@@ -28,7 +28,7 @@ class Tonline : Scraper {
         val url = titleAndLink?.attr("abs:href") ?: ""
         val title = titleAndLink?.wholeOwnText() ?: ""
         val overline = newsEntry?.getElementsByClass("css-169b1y4")?.first()?.text() ?: ""
-        val date = div.parent()?.parent()?.parent()?.getElementsByClass("eamwxa70")?.first()?.wholeOwnText() ?: ""
+        val date = element.parent()?.parent()?.parent()?.getElementsByClass("eamwxa70")?.first()?.wholeOwnText() ?: ""
         val news = NewsFactory.createNews(
             title = title,
             url = url,
@@ -39,10 +39,12 @@ class Tonline : Scraper {
             datePattern = "eeee, dd.MM",
         )
         if (!news.relevant) return
-        delay(delay)
-        val (text, authors) = getArticleText(url)
-        news.text = text
-        news.author = authors
+        if (getArticleDetails) {
+            delay(delay)
+            val (text, authors) = getArticleText(url)
+            news.text = text
+            news.author = authors
+        }
         newsList.add(news)
     }
 
@@ -55,9 +57,5 @@ class Tonline : Scraper {
         val subtitles = if (subtitlesList.isNotEmpty()) subtitlesList.reduce { a, b -> "$a\n$b" } else ""
         text += subtitles
         return text to authors
-    }
-
-    override suspend fun parse(element: Element, newsList: MutableList<News>) {
-        parseToHeadline(element, newsList)
     }
 }

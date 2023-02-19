@@ -18,7 +18,7 @@ suspend fun getStaticContentFromUrl(url: String): Document {
             Jsoup.connect(url).get()
         } catch (ex: Exception) {
             ex.printStackTrace()
-            Document(url)
+            Document(url.ifEmpty { "url" })
         }
     }
 }

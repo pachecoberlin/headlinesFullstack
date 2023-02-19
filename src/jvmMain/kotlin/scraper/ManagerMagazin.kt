@@ -30,7 +30,8 @@ class ManagerMagazin : Scraper {
             timeString
         )
         if (!news.relevant) return
-        news.text = getStaticContentFromUrl(url).getElementsByTag("article").first()?.wholeText() ?: ""
+        if (getArticleDetails)
+            news.text = getStaticContentFromUrl(url).getElementsByTag("article").first()?.wholeText() ?: ""
         newsList.add(news)
     }
 }

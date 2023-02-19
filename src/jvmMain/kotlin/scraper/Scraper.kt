@@ -17,7 +17,7 @@ interface Scraper {
     val delay: Long
         get() = (510 + Random.nextInt(3, 300)).toLong()
     val getArticleDetails: Boolean
-        get() = false
+        get() = true
 
     suspend fun getNews(newsList: MutableList<News>): List<News> {
         println("Scraping: $url")

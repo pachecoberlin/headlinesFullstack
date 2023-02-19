@@ -34,10 +34,12 @@ class Tagesschau : Scraper {
             datePattern = "HH:mmeeee, dd. MMMM yyyy"
         )
         if (!news.relevant) return
-        delay(delay)
-        val (text, author) = getArticleText(url)
-        news.text = text
-        news.author = author
+        if (getArticleDetails) {
+            delay(delay)
+            val (text, author) = getArticleText(url)
+            news.text = text
+            news.author = author
+        }
         newsList.add(news)
     }
 

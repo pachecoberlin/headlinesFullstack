@@ -21,7 +21,7 @@ class FinanzenNet : Scraper {
         val datePattern = if (dateString.contains(":")) "HH:mm" else "dd.MM.yy"
         val news = NewsFactory.createNews(title = title, url = url, provider = "Finanzen.net", datePattern = datePattern, dateString = dateString)
         if (!news.relevant) return
-        if (url.isNotEmpty()) {
+        if (getArticleDetails) {
             delay(delay)
             val document = getStaticContentFromUrl(url)
             news.text = document.select("div[id=\"news-container\"]").first()?.wholeText() ?: ""
